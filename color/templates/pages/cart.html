@@ -1,0 +1,85 @@
+{% extends '../base.html' %}
+{% block title %}Color Cult | Shopping Cart{% endblock title %}
+{% block content %}
+<div class="container">
+    <h3 class="head-line-text pos-rel">Shopping Cart</h3>
+    <div class="row">
+        <div class="col-md-6">
+            <span class="items-count">Items( {{ product_count_in_cart }} )</span>
+            <span class="sub">Subtotal</span>
+        </div>
+    </div>
+    
+    {% if product_object_list %}
+        <div class="row">
+            <div class="col-md-7">
+                <ul class="ul cart-ul">
+                    {% for p in product_object_list %}
+                        <li>
+                            <div class="li-inner">
+                                <div class="left-img">
+                                    <img class="img-fluid" src="{{ p.product_image.url }}">
+                                </div>
+                                <div class="right-text">
+                                    <p class="name">{{ p.product_name }}</p>
+                                    <p class="category">{{ p.product_category.first | join:', ' }}</p>
+                                    <div class="p-list">
+                                        <p>Color: <span>{{ p.product_color.first | join:', ' }}</span></p>
+                                        <p>Size:<span></span></p>
+                                        <p>Quantity:<span></span></p>
+                                    </div>
+                                    <div class="r-total">
+                                        <span>
+                                            <form method="POST">
+                                                {% csrf_token %}
+                                                <input type="hidden" name="prod-value" value="{{ p.id }}">
+                                                <button name="remove" id="remove" class="remove" type="submit">Remove</button>
+                                            </form>
+                                        </span>
+                                        <span>Rs. {{ p.price }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    {%endfor%}
+                </ul>
+            </div>
+            <div class="col-md-5">
+                <div class="summary-box">
+                    <p>Order Summary</p>
+                    <ul class="ul summary-listing">
+                        <li><span>Cart Total</span><span>₹ {{ cart_total }}</span></li>
+                        <li><span>GST</span><span>₹ {{ gst }}</span></li>
+                        <li><span>Total Amount</span><span>₹ {{ whole_total }}</span></li>
+                        <li class="li-border"><span>Shipping Charges</span><span class="free">{% if shipping == "Free" %}{{ shipping }}{% else %}₹ {{ shipping }}{% endif %}</span></li>
+                        <li><span class="total-pay">Total Payable</span><span>₹ {{ whole_total }}</span></li>
+                    </ul>
+                    
+                </div>
+                {% if request.user.is_authenticated %}
+                    <a class="checkout" href="{% url 'color:order-summary' %}">Continue</a>
+                {% else %}
+                    <a class="checkout" href="{% url 'login' %}?next={{request.path}}">Continue</a>
+                {% endif %}
+            </div>
+        </div>
+     {% else %}
+        <div class="">
+            <p>You havn't shoped yet</p>
+            <a href="{% url 'color:dashboard' %}">Go to shop</a>
+        </div>
+     {% endif %}
+</div>
+<div class="messages">
+    {%if messages %}
+        {%for message in messages%}
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {{message}}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        {%endfor%}
+    {%endif%}
+</div>
+{% endblock %}

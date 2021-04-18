@@ -1,0 +1,16 @@
+{% extends '../base.html' %}
+{% block title %}Edit Address | ColorCult{% endblock title %}
+{% block content %}
+    <div class="container">
+        <h3 class="head-line-text pos-rel">Edit Address</h3>
+        <div class="row">
+            <div class="col-md-6 col-sm-6 col-xs-12 margin-auto">
+                <form method="POST" class="edit-address">
+                    {% csrf_token %}
+                    {{form}}
+                    <button type="submit" name="new-address" class="btn btn-primary checkout">Save</button>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

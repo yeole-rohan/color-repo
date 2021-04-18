@@ -1,0 +1,47 @@
+{% extends '../base.html' %}
+{% block title %}ColorCult | Login{% endblock title %}
+{% block content %}
+<div class="container mt-5">
+    {% if form.errors %}
+        {% for field in form %}
+            {% for error in field.errors %}
+                <div class="alert alert-danger">
+                    <strong>{{ error|escape }}</strong>
+                </div>
+            {% endfor %}
+        {% endfor %}
+        {% for error in form.non_field_errors %}
+            <div class="alert alert-danger">
+                <strong>{{ error|escape }}</strong>
+            </div>
+        {% endfor %}
+    {% endif %}
+    <div class="card-body">
+        <form method="POST" class="login-post">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="username">
+                        <label>{{ form.username.label }}</label>
+                        {{ form.username }}
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="pass1">
+                        <label>{{ form.password.label }}</label>
+                        {{ form.password }}
+                        {{ form.password.help_text }}
+                    </div>
+                </div>
+                <div class="control-group">
+                <div class="controls">
+                    <button type="submit" class="btn register-button">Login</button>
+                </div>
+            </div>
+        </form>
+        <div class="reg-button">
+            <p>Don't have an account ?<a name="registerButton" href="{% url 'color:register_user' %}">Register</a></p>
+        </div>
+    </div>
+</div>
+{% endblock %}

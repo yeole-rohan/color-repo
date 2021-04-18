@@ -1,0 +1,113 @@
+{% extends '../base.html' %}
+{% block title %}Collaborate with Us | ColorCult{% endblock title %}
+{% block content %}
+ {% load static %}
+    <section id="collab">
+        <div class="collab-in">
+            <img src="{% static '/img/collab.png' %}" class="img-fluid">
+        </div>
+        <div class="collab-text">
+            <div class="head">Artists, Scribblers, and Doodlers hear us out!!</div>
+            <div class="collab-desc">
+                Color Cult is a team that thrives on designs created by the people, for the people. A little extra cash doesn’t harm anyone and now you can earn yours via your amazeballs art. If you’re an acclaimed artist or a seventh-grade inter-school art competition champ, we got you! C’mon get going and send in your artworks, so that our team reaches out to you soon.</br> Don’t you want to see your amazing masterpieces on your mom’s t-shirt or a friend’s coffee mug?
+            </div>
+            <div class="headline">
+                “We don’t know who you are, but will find you and hire you.”
+            </div>
+        </div>
+    </section>
+    <section id="start-collab">
+      <div class="container-collab">
+        <div class="start-collab-text-up">Trust us, the process is as effortless as your next doodle.</br> Just follow the three simple steps:</div>
+        <div class="row">
+          <div class="col-md-4">
+            <div class="start-collab-img">
+              <img class="img-fluid" src="{% static '/img/create.png' %}">
+            </div>
+            <div class="start-collab-title">
+              Create
+            </div>
+            <div class="start-collab-text">
+              This one’s on you. Take out your sketch-books or ipads, and create something cool! Find your inspiration anywhere: be it in the outdoors or the next Bollywood movie you watch. We’re open to all kinds of designs.
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="start-collab-img">
+              <img class="img-fluid" src="{% static '/img/upload.png' %}">
+            </div>
+            <div class="start-collab-title">
+              Be Cult Ready
+            </div>
+            <div class="start-collab-text">
+              This step is our favorite as this is where both the sides come together! Once your design is ready, mail it to our team at ----@---.com and voila! You’re a part of the team. Tell us something about you and your design and send it to us.
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="start-collab-img">
+              <img class="img-fluid" src="{% static '/img/sell.png' %}">
+              
+            </div>
+            <div class="start-collab-title">
+              Sit Back & Relax
+            </div>
+            <div class="start-collab-text">
+              Now, we got you. The team at Color Cult will work super speed to get your designs out to the world on our website and social media pages. You would receive a royalty every month, along with some occasional sad jokes! A pretty win-win situation, eh?
+            </div>
+          </div>
+        </div>
+        <div class="ask-upload">- Or upload your designs from here -</div>
+        <div class="upload-collab">
+          <div class="upload-left">
+            <div class="upload-img-wrap">
+              <img src="{% static '/img/upload-ask.jpeg' %}" class="img-fluid">
+            </div>
+            <p>We would like you to visit our <a href="#">Submission Guidelines</a> for more information.</p>
+          </div>
+          <div class="upload-right">
+            <form method="POST" enctype='multipart/form-data'>
+              {% csrf_token %}
+              <div class="form-row">
+                <div class="form-group col-md-6">
+                  {{ form.full_name.label_tag }}
+                  {{ form.full_name }}
+                </div>
+                <div class="form-group col-md-6">
+                  {{ form.email.label_tag }}
+                  {{ form.email }}
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group col-md-6">
+                  {{ form.phone_number.label_tag }}
+                  {{ form.phone_number }}
+                </div>
+                <div class="form-group col-md-6">
+                  {{ form.username.label_tag }}
+                  {{ form.username }}
+                </div>
+                 <div class="form-group col-md-6">
+                  {{ form.design_name.label_tag }}
+                  {{ form.design_name }}
+                </div>
+                 <div class="form-group col-md-6">
+                  {{ form.design_file.label_tag }}
+                  {{ form.design_file }}
+                  <small id="{{ form.design_file.id_for_label }}" class="form-text text-muted">Maximum file size: 20MB</small>
+                </div>
+                <div class="form-group col-md-12">
+                  {{ form.design_desc.label_tag }}
+                  {{ form.design_desc }}
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group col-md-12">
+                  <button type="submit" class="checkout" name="collaborate">Submit</button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section id="your-design"></section>
+{% endblock %}

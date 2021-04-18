@@ -1,0 +1,36 @@
+{% extends '../base.html' %}
+{% block title %}My Designs{% endblock title %}
+{% block content %}
+<div class="container">
+    <h3 class="head-line-text pos-rel">My Designs</h3>
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <p class="count-to">Total ({{ get_current_login_user_design_count }})
+        </div>
+         <div class="col-md-6 text-right">
+            <a type="button" href="{% url 'color:upload-design' %}" class="btn btn-info upload-btn"><span>+</span> Upload</a>
+        </div>
+    </div>
+    <div class="row">
+        {% for get_current_login_user_design in get_current_login_user_designs %}
+            <div class="col-md-3 designs-row">
+                <div class="img-wrap">
+                    <img src="{{ get_current_login_user_design.design_image.url }}" class="img-fluid">
+                </div>
+                <div class="text-wrap">
+                    <h4 class="design-name">{{ get_current_login_user_design.design_name }}</h4>
+                    <p class="design-status">Status:
+                        {% if  get_current_login_user_design.get_design_status_display == "Under Review" %}
+                            <span class="under-review pos-rel">{{ get_current_login_user_design.get_design_status_display }}</span>
+                        {% elif  get_current_login_user_design.get_design_status_display == "Rejected" %}
+                            <span class="rejected pos-rel">{{ get_current_login_user_design.get_design_status_display }}</span>
+                        {% else %}
+                            <span class="accepted pos-rel">{{ get_current_login_user_design.get_design_status_display }}</span>
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

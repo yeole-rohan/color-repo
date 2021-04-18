@@ -1,0 +1,90 @@
+{% extends '../base.html' %}
+{% block title %} Product Details | ColorCult {% endblock title %}
+{% block content %}
+        <section id="home-banner">
+        <div class="home-banner-slider">
+            <div class="home-img">
+            <img class="img-fluid" src="{{ get_home_banners.banner_one.url }}">
+            </div>
+            <div class="home-img">
+            <img class="img-fluid" src="{{ get_home_banners.banner_two.url }}">
+            </div>
+            <div class="home-img">
+            <img class="img-fluid" src="{{ get_home_banners.banner_three.url }}">
+            </div>
+            <div class="home-img">
+            <img class="img-fluid" src="{{ get_home_banners.banner_four.url }}">
+            </div>
+        </div>
+        </section>
+        <section id="product-search">
+            <div class="row">
+                <div class="col-md-2">
+                    <div class="search-left">
+                    <p>Products</p>
+                        <ul class="search-ui ul">
+                            {% for get_all_theme_category in get_all_theme_categories %}
+                                <li><a href="{% url 'color:search'  get_all_theme_category.category get_all_theme_category.id %}">{{ get_all_theme_category.category }}</a></li>
+                            {% endfor %}
+                        </ul>
+                        <p>Popular Themes</p>
+                        <ul class="theme-ul ul">
+                            {% for get_all_theme in get_all_themes %}
+                                <li><a href="{% url 'color:search'  get_all_theme.theme get_all_theme.id %}">{{ get_all_theme.theme }}</a></li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-10">
+                    <div class="search-right">
+                        <h2>{{ category_or_theme }}</h2>
+                        <div class="breadcrumb">
+                            <a href="{% url 'color:dashboard' %}">home</a>/
+                            <a class="active-cat">{{ category_or_theme }}</a>
+                        </div>
+                        <div class="row mb-4">
+                            {% for product in get_products_by_category_or_theme %}
+                                <div class="col-md-3">
+                                    <div class="prod-outer-wrap">
+                                    <a class="prod-a" href="{% url 'color:product-details' product.id %}">
+                                        <div class="prod-img-wrap">
+                                        <img src="{{ product.product_image.url }}" alt="{{ product.prodcut_description }}" class="img-fluid h-100">
+                                        </div>
+                                        <div class="prod-text">
+                                        <div class="prod-cat"> {{ product.product_theme.first}} </div>
+                                        <div class="prod-theme"> {{ product.product_category.first }} </div>
+                                        </div>
+                                        <div class="pricing">
+                                        <div class="normal-price">Rs. {{ product.price }} </div>
+                                        <div class="cult-price"><span>Rs. {{ product.cult_member_price }}</span> for Cult memebers</div>
+                                        </div>
+                                    </a>
+                                    <div class="design-by"> Design by <a class="creator" href="{% url 'color:user-design' product.creator.id %}">{{ product.creator }}</a></div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <div class="pagination">
+                            <span class="step-links">
+                             <ul class="pagination justify-content-center">
+                                {% if get_products_by_category_or_theme.has_previous %}
+                                   <li> <a href="?page={{ get_products_by_category_or_theme.previous_page_number }}"class="page-link">Previous</a></li>
+                                {% endif %}
+                                {% if get_products_by_category_or_theme.has_next %}
+                                    <span class="current">
+                                        <li><a class="active">{{ get_products_by_category_or_theme.number }}</a></li>
+                                    </span>
+                                    <li> <a href="?page={{ get_products_by_category_or_theme.next_page_number }}"class="page-link">{{ get_products_by_category_or_theme.next_page_number }}</a></li>
+                                {% endif %}
+                                {% if get_products_by_category_or_theme.has_next %}
+                                    <li><a href="?page={{ get_products_by_category_or_theme.next_page_number }}"class="page-link">Next</a></li>
+                                {% endif %}
+                                </ul>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section id="your-design" class="search-design"></section>
+{% endblock %}

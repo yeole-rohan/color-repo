@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+{% block title %} Color Cult | Home {% endblock title %}
+{% block content %}
+    {% load static %}
+    
+    <section id="home-banner">
+        <div class="home-banner-slider">
+            <div class="home-img">
+                <img class="img-fluid" src="{{ get_home_banners.banner_one.url }}">
+            </div>
+            <div class="home-img">
+                <img class="img-fluid" src="{{ get_home_banners.banner_two.url }}">
+            </div>
+            <div class="home-img">
+                <img class="img-fluid" src="{{ get_home_banners.banner_three.url }}">
+            </div>
+            <div class="home-img">
+                <img class="img-fluid" src="{{ get_home_banners.banner_four.url }}">
+            </div>
+        </div>
+    </section>
+    <section>
+      <div class="">
+        <div class="section-title ups">
+          <span>Shop by themes</span>
+        </div>
+        <ul class="ul home-prod-menu">
+          {% for theme in get_six_themes %}
+            <li>
+              <a href="{% url 'color:search' theme.theme theme.id %}">
+                <img src="{{ theme.theme_image.url }}" title="{{ theme.theme }}" alt="{{ theme.theme }}" class="img-fluid">
+              </a>
+            </li>
+          {% endfor %}
+        </ul>
+        <div class="section-title up">
+          <span>Shop by products</span>
+        </div>
+        <ul class="ul home-prod-menu bottom">
+          {% for category in get_six_theme_categories %}
+            <li>
+              <a href="{% url 'color:search' category.category category.id %}">
+                <img src="{{ category.category_image.url }}" title="{{ category.category }}" alt="{{ category.category }}" class="img-fluid">
+              </a>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </section>
+    <section id="replaceble_banners">
+      <div class="container">
+        <div class="row">        
+          <div class="col-lg-4 col-md-4 col-sm-12 mb-4">
+            <img class="img-fluid" src="{{get_replaceable_banners.first_image.url}}">
+          </div>
+          
+          <div class="col-lg-4 col-md-4 col-sm-12 mb-4">
+            <img class="img-fluid" src="{{get_replaceable_banners.second_image.url}}">
+          </div>
+          <div class="col-lg-4 col-md-4 col-sm-12 mb-4">
+            <img class="img-fluid" src="{{get_replaceable_banners.third_image.url}}">
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <img class="img-fluid" src="{{get_replaceable_banners.long_banner_image.url}}">
+          </div>
+        </div>
+      </div>
+    </section>
+    <section id="cult-fav">
+      <div class="container">
+        <div class="section-title">
+          <span>Cult favourites</span>
+        </div>
+        <div class="prod-wrap">
+          <div class="row mb-4">
+          
+            {% for get_cult_fav in get_cult_favs %}
+              <div class="col-md-3">  
+                <div class="prod-outer-wrap">
+                  <a class="prod-a" href="{% url 'color:product-details' get_cult_fav.id %}">
+                    <div class="prod-img-wrap">
+                      <img src="{{ get_cult_fav.product_image.url }}" alt="{{ get_cult_fav.prodcut_description }}" class="img-fluid h-100">
+                    </div>
+                    <div class="prod-text">
+                      <div class="prod-cat"> {{ get_cult_fav.product_theme.first }} </div>
+                      <div class="prod-theme"> {{ get_cult_fav.product_category.first}} </div>
+                    </div>
+                    <div class="pricing">
+                      <div class="normal-price">Rs. {{ get_cult_fav.price }} </div>
+                      <div class="cult-price"><span>Rs. {{ get_cult_fav.cult_member_price }}</span> for Cult memebers</div>
+                    </div>
+                  </a>
+                  <div class="design-by"> Design by <a class="creator">{{ get_cult_fav.creator }}</a></div>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </section>
+    <section id="your-design"></section>
+    
+{% endblock %}

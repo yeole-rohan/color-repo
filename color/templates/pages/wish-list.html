@@ -1,0 +1,62 @@
+{% extends '../base.html' %}
+{% block title %}Color Cult | My Profile{% endblock title %}
+{% block content %}
+    {% load static %}
+    <section id="home-banner">
+        <div class="home-banner-slider">
+            <div class="home-img">
+                <img class="img-fluid" src="{{ get_home_banners.banner_one.url }}">
+            </div>
+            <div class="home-img">
+                <img class="img-fluid" src="{{ get_home_banners.banner_two.url }}">
+            </div>
+            <div class="home-img">
+                <img class="img-fluid" src="{{ get_home_banners.banner_three.url }}">
+            </div>
+            <div class="home-img">
+                <img class="img-fluid" src="{{ get_home_banners.banner_four.url }}">
+            </div>
+        </div>
+    </section>
+    <div class="container">
+      <h3 class="head-line-text pos-rel">My Wish List</h3>
+        <div class="row">
+            <div class="col-md-12">
+                Items( {{ wish_list_count }} )
+            </div>
+        </div>
+        <div class="row">
+            {% for product in wish_list_product %}
+                {% for p in product %}
+                    <div class="col-md-3">
+                        <div class="prod-outer-wrap">
+                            <div class="prod-img-wrap">
+                                <img src="{{ p.product_image.url }}" alt="{{ p.prodcut_description }}" class="img-fluid h-100">
+                            </div>
+                            <div class="prod-text">
+                                <div class="prod-cat"> {{ p.product_theme.first}} </div>
+                                <div class="prod-theme"> {{ p.product_category.first }} </div>
+                            </div>
+                            <div class="pricing">
+                                <div class="normal-price">Rs. {{ p.price }} </div>
+                                <div class="cult-price"><span>Rs. {{ p.cult_member_price }}</span> for Cult memebers</div>
+                            </div>
+                            <div class="move-wrap">
+                                <form method="POST">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="prod-value" value="{{ p.id }}">
+                                    <button name="remove" id="remove" class="remove" type="submit">Remove</button>
+                                </form>
+                                <form method="POST">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="move-value-cart" value="{{ p.id }}">
+                                    <button name="move-to-cart" class="checkout" type="submit">Move to Cart</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

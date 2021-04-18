@@ -1,0 +1,160 @@
+{% extends '../base.html' %}
+{% block title %} Product Details | ColorCult {% endblock title %}
+{% block content %}
+{% load static %}
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-10">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="img-slider">
+                        {% if request.user.is_authenticated %}
+                            {% if user_wish_list_product_id %}
+                                <form method="POST" >
+                                    {% csrf_token %}
+                                    <button type="submit" class="wish full" name="wish-full"><svg id="paths" class="" width="20" height="19" viewBox="0 0 20 19" fill="none" xmlns="http://www.w3.org/2000/svg"><path id="path" d="M18.205 1.79099C17.068 0.659987 15.574 0.0369873 13.996 0.0369873C12.513 0.0369873 11.104 0.588987 9.99998 1.59499C8.89598 0.588987 7.48798 0.0369873 6.00398 0.0369873C4.42598 0.0369873 2.93198 0.659987 1.79098 1.79499C-0.562019 4.15799 -0.561019 7.85399 1.79298 10.207L9.99998 18.414L18.207 10.207C20.561 7.85399 20.562 4.15799 18.205 1.79099Z" fill="black"/></svg></button>
+                                </form>
+                            {% else %}
+                                <form method="POST" >
+                                    {% csrf_token %}
+                                    <button type="submit" class="wish" name="wish-list"><svg id="paths" class="" width="20" height="19" viewBox="0 0 20 19" fill="none" xmlns="http://www.w3.org/2000/svg"><path id="path" d="M18.205 1.79099C17.068 0.659987 15.574 0.0369873 13.996 0.0369873C12.513 0.0369873 11.104 0.588987 9.99998 1.59499C8.89598 0.588987 7.48798 0.0369873 6.00398 0.0369873C4.42598 0.0369873 2.93198 0.659987 1.79098 1.79499C-0.562019 4.15799 -0.561019 7.85399 1.79298 10.207L9.99998 18.414L18.207 10.207C20.561 7.85399 20.562 4.15799 18.205 1.79099Z" fill="black"/></svg></button>
+                                </form>
+                            {% endif %}
+                         {% else %}
+                            <a href="{% url 'login' %}?next={{request.path}}" class="not-wish">
+                                <svg id="paths" class="" width="20" height="19" viewBox="0 0 20 19" fill="none" xmlns="http://www.w3.org/2000/svg"><path id="path" d="M18.205 1.79099C17.068 0.659987 15.574 0.0369873 13.996 0.0369873C12.513 0.0369873 11.104 0.588987 9.99998 1.59499C8.89598 0.588987 7.48798 0.0369873 6.00398 0.0369873C4.42598 0.0369873 2.93198 0.659987 1.79098 1.79499C-0.562019 4.15799 -0.561019 7.85399 1.79298 10.207L9.99998 18.414L18.207 10.207C20.561 7.85399 20.562 4.15799 18.205 1.79099Z" fill="black"/>
+                                </svg>
+                            </a>
+                        {% endif %}
+                            {% if get_images %}
+                                <div class="main-img">
+                                    {% for get_image in get_images %}
+                                        <div class="prod-image-outer">
+                                            <img class="img-fluid" src="{{ get_image.product_images.url }}">
+                                        </div>
+
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                            <div class="prod-image-outer">
+                                <img class="img-fluid" src="{{ get_single_product.product_image.url }}">
+                                {% comment %} <svg id="paths" class="" width="20" height="19" viewBox="0 0 20 19" fill="none" xmlns="http://www.w3.org/2000/svg"><path id="path" d="M18.205 1.79099C17.068 0.659987 15.574 0.0369873 13.996 0.0369873C12.513 0.0369873 11.104 0.588987 9.99998 1.59499C8.89598 0.588987 7.48798 0.0369873 6.00398 0.0369873C4.42598 0.0369873 2.93198 0.659987 1.79098 1.79499C-0.562019 4.15799 -0.561019 7.85399 1.79298 10.207L9.99998 18.414L18.207 10.207C20.561 7.85399 20.562 4.15799 18.205 1.79099Z" fill="black"/></svg> {% endcomment %}
+                            </div>
+                            {% endif %}
+                            
+                            <div class="prod-slider">
+                                <div class="slide-prod">
+                                    {% for get_image in get_images %}
+                                        <div class="prod-image-outer">
+                                            <img class="img-fluid" src="{{ get_image.product_images.url }}">
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="prod-details-text">
+                            <p class="text-cat">{{ get_single_product.product_category.all | join:', ' }}</p>
+                            <div class="theme-text">
+                                <p>{{ get_single_product.product_theme.all | join:', ' }}</p>
+                                <p> Design by <a href="{% url 'color:user-design' get_single_product.creator.id  %}" class="creator">{{ get_single_product.creator }}</a></p>
+                            </div>
+                            {% if  get_single_product.product_size.all %}
+                            
+                            
+                            <div class="text-tabs">
+                                <p>Select A Size</p>
+                                {% for prod_size in get_single_product.product_size.all %}
+                                    <button class="button-tabs active"> {{ prod_size }}</button>
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                            {% if get_single_product.product_color.all %}
+                                <div class="colors">
+                                    <p>Color</p>
+                                    {% for color in get_single_product.product_color.all %}
+                                        <div class="button-tabs" style="background-color:{{ color }}"></div>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            
+                            <div class="text-pricing">
+                                <div class="text-normal-price">Rs. {{ get_single_product.price }} </div>
+                                <div class="text-cult-price"><span>Rs. {{ get_single_product.cult_member_price }}</span> for Cult memebers</div>
+                            </div>
+                            <div class="text-buttons">
+                              {% if get_single_product.id in ids %}
+                                <a class="add-cart" href="{% url 'color:view-cart' %}">Go To Cart</a>
+                              {% else %}
+                                <form method="POST">
+                                  {% csrf_token %}
+                                  <button type="submit" class="add-cart" name="cart">Add to Cart</button>
+                                </form>
+                              {% endif %}
+                              
+                                <button type="submit" class="buy-now">Buy Now</button>
+                            </div>
+                            <div class="description">
+                                <p class="de">Description</p>
+                                <p>{{ get_single_product.prodcut_description }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="similar-prod">
+            <div class="section-title">
+                <span>Similar Products</span>
+            </div>
+            <div class="row">
+                {% for get_similar_product in get_similar_products %}
+                    <div class="col-md-3">
+                        <div class="prod-outer-wrap">
+                            <a class="prod-a" href="{% url 'color:product-details' get_similar_product.id %}">
+                                <div class="prod-img-wrap">
+                                    <img src="{{ get_similar_product.product_image.url }}" alt="{{ get_similar_product.prodcut_description }}" class="img-fluid h-100">
+                                </div>
+                                <div class="prod-text">
+                                    <div class="prod-cat"> {{ get_similar_product.product_theme.all | join:', ' }} </div>
+                                    <div class="prod-theme"> {{ get_similar_product.product_category.all | join:', ' }} </div>
+                                </div>
+                                <div class="pricing">
+                                    <div class="normal-price">Rs. {{ get_similar_product.price }} </div>
+                                    <div class="cult-price"><span>Rs. {{ get_similar_product.cult_member_price }}</span> for Cult memebers</div>
+                                </div>
+                            </a>
+                            <div class="design-by"> Design by <a class="creator">{{ get_similar_product.creator }}</a></div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="second-row">
+                <div class="row">
+                    {% for get_similar_product in get_similar_products_by_theme %}
+                        <div class="col-md-3">
+                            <div class="prod-outer-wrap">
+                                <a class="prod-a" href="{% url 'color:product-details' get_similar_product.id %}">
+                                    <div class="prod-img-wrap">
+                                        <img src="{{ get_similar_product.product_image.url }}" alt="{{ get_similar_product.prodcut_description }}" class="img-fluid h-100">
+                                    </div>
+                                    <div class="prod-text">
+                                        <div class="prod-cat"> {{ get_similar_product.product_theme.all | join:', ' }} </div>
+                                        <div class="prod-theme"> {{ get_similar_product.product_category.all | join:', ' }} </div>
+                                    </div>
+                                    <div class="pricing">
+                                        <div class="normal-price">Rs. {{ get_similar_product.price }} </div>
+                                        <div class="cult-price"><span>Rs. {{ get_similar_product.cult_member_price }}</span> for Cult memebers</div>
+                                    </div>
+                                </a>
+                                <div class="design-by"> Design by <a class="creator">{{ get_similar_product.creator }}</a></div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <section id="your-design" class="design"></section>
+{% endblock %}

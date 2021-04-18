@@ -1,0 +1,115 @@
+{% extends '../base.html' %}
+{% block title %}Color Cult | My Profile{% endblock title %}
+{% block content %}
+    {% load static %}
+    <section id="home-banner">
+        <div class="home-banner-slider">
+            <div class="home-img">
+                <img class="img-fluid" src="{{ get_home_banners.banner_one.url }}">
+            </div>
+            <div class="home-img">
+                <img class="img-fluid" src="{{ get_home_banners.banner_two.url }}">
+            </div>
+            <div class="home-img">
+                <img class="img-fluid" src="{{ get_home_banners.banner_three.url }}">
+            </div>
+            <div class="home-img">
+                <img class="img-fluid" src="{{ get_home_banners.banner_four.url }}">
+            </div>
+        </div>
+    </section>
+    <div class="container">
+        <h3 class="head-line-text pos-rel">My Profile</h3>
+        <div class="tab-panel">
+            <div class="tab">
+                <button class="tablinks active" onclick="openCity(event, 'personal_details')">Personal Details</button>
+                <button class="tablinks" onclick="openCity(event, 'address_details')">Address Details</button>
+                <button class="tablinks" onclick="openCity(event, 'banking_details')">Bank Details</button>
+                <button class="tablinks" onclick="openCity(event, 'change_password')">Change Password</button>
+            </div>
+            <div id="personal_details" class="tabcontent">
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="{{form.first_name.id_for_label}}">{{form.first_name.label}}</label>
+                            {{form.first_name}}
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="{{form.last_name.id_for_label}}">{{form.last_name.label}}</label>
+                            {{form.last_name}}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                            <label for="{{form.phone_number.id_for_label}}">{{form.phone_number.label}}</label>
+                            {{form.phone_number}}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{form.email.id_for_label}}">{{form.email.label}}</label>
+                        {{form.email}}
+                        <small id="Help" class="form-text text-muted">{{form.email.help_text}}</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="{{form.username.id_for_label }}">{{form.username.label}}</label>
+                        {{form.username}}
+                    </div>
+                    <div class="form-group radio-buttons">
+                        <span class="gen-label">{{form.gender.label}}</span>
+                        {% for radio in form.gender %}
+                            <div class="form-check form-check-inline mb-3">
+                            {{ radio.tag }}
+                            <label class="form-check-label" for="{{ radio.id_for_label }}">{{ radio.choice_label }}</label>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <button type="submit" class="btn btn-primary checkout">Update</button>
+                </form>
+            </div>
+            <div id="address_details" class="tabcontent">
+                {% for address in get_address_of_user %}
+                    <div class="address-list-wrap">
+                        <p>{{ address.address }} </p>
+                        <p>{{ address.landmark }}, {{ address.city }}, {{ address.district }}, {{ address.state }}, Pin Code - {{ address.pin_code }}</p>
+                        <p>Mobile: </p>
+                        <div class="edit-remove">
+                            <a class="edit" href="{% url 'color:edit-address' address.id %}">Edit</a>
+                            <form method="POST">
+                            {% csrf_token %}
+                                <input type="hidden" name="remove-address-id" value="{{ address.id }}">
+                                <p><button type="submit" name="remove-address" class="remove-address">Remove</button></p>
+                            </form>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            <div id="banking_details" class="tabcontent">
+                <h3>Tokyo</h3>
+                <p>Tokyo is the capital of Japan.</p>
+            </div>
+            <div id="change_password" class="tabcontent">
+                <form method="POST">
+                    {{ change_pass }}
+                    <button type="submit" name="update_pass" class="checkout" id="update_pass">Update Password</button>
+                </form>
+            </div>
+        </div>
+    </div>
+<script>
+    function openCity(evt, cityName) {
+        console.log(cityName)
+        var i, tabcontent, tablinks;
+        tabcontent = document.getElementsByClassName("tabcontent");
+        for (i = 0; i < tabcontent.length; i++) {
+            tabcontent[i].style.display = "none";
+        }
+        tablinks = document.getElementsByClassName("tablinks");
+        for (i = 0; i < tablinks.length; i++) {
+            tablinks[i].className = tablinks[i].className.replace(" active", "");
+        }
+        document.getElementById(cityName).style.display = "block";
+        evt.currentTarget.className += " active";
+    }
+    // Get the element with id="defaultOpen" and click on it
+    document.getElementById("defaultOpen").click();
+</script>
+{% endblock %}

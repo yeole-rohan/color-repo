@@ -1,0 +1,41 @@
+{% extends '../base.html' %}
+{% block title %}Upload Your Design{% endblock title %}
+{% block content %}
+{% load static %}
+    <div class="container">
+        {% if form.errors %}
+            {% for field in form %}
+                {% for error in field.errors %}
+                    <div class="alert alert-danger">
+                        <strong>{{ error|escape }}</strong>
+                    </div>
+                {% endfor %}
+            {% endfor %}
+            {% for error in form.non_field_errors %}
+                <div class="alert alert-danger">
+                    <strong>{{ error|escape }}</strong>
+                </div>
+            {% endfor %}
+        {% endif %}
+        <div class="row">
+            <h3 class="upload">Upload</h3>
+            <div class="col-md-4 pos-rel">
+                <div class="text-img-wrap">
+                    <img src="{% static '/img/upload-ask.jpeg' %}" class="img-fluid">
+                    <p> We would like you to visit our <a class="submission" href="#">Submission Guidelines</a>for more information.</p>
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="design-upload">
+                    <form method="POST" enctype='multipart/form-data'>
+                        {% csrf_token %}
+                        {{form}}
+                        <button id="upload-submit"class="upload-submit" type="submit">Upload</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}
