@@ -1,346 +1,445 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    {% load static %}
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
-    <link rel="stylesheet" href="{% static 'css/slick-theme.css' %}">
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    <title>{% block title %}{% endblock %}</title>
-  </head>
-  <body>
-  
-    <nav class="navbar navbar-expand-lg navbar-light">
-        <div class="container-fluid pos-rel">
-        <a class="navbar-brand" href="{% url 'color:dashboard' %}">
-            <img class="img-fluid" src="{% static '/img/logo.png' %}" alt="Color Cult" >
-        </a>
-        
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        
-        <div class="collapse navbar-collapse" id="navbarText">
-            <span class="navbar-text log-wrap">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0 ul">
-                <li class="nav-item">
-                {% if request.user.is_authenticated %}
-                <div class="dropdown logged-in">
-                  <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Me
-                  </a>
-                  <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                    <a class="dropdown-item" href="{% url 'color:my-profile' %}">My Profile</a>
-                    <a class="dropdown-item" href="#">My Orders</a>
-                    <a class="dropdown-item" href="{% url 'color:wish-list' %}">My Wishlist</a>
-                    {% if request.user.is_creator %}
-                    <div class="dropdown-divider"></div>
-                      <a class="dropdown-item" href="{% url 'color:my-designs' %}">My Designs</a>
-                      <a class="dropdown-item" href="{% url 'color:my-products' %}">My Products</a>
-                      <a class="dropdown-item" href="#">My Commissions</a>
-                    {% endif %}
-                    <a class="dropdown-item login-button" href="{% url 'logout' %}">Logout</a>
-                  </div>
-                </div>
-                 
-                {% else %}
-                  <a class="login-button"  href="{% url 'login' %}">Login</a>
-                {% endif %}
-                </li>
-                <li class="nav-item">
-                <a href="{% url 'color:wish-list' %}">
-                    <svg width="20" height="19" viewBox="0 0 20 19" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9.99998 1.59499C8.89598 0.588987 7.48798 0.0369873 6.00398 0.0369873C4.42598 0.0369873 2.93198 0.659987 1.79098 1.79499C-0.562019 4.15799 -0.561019 7.85399 1.79298 10.207L9.12498 17.539C9.29498 17.838 9.62298 18.031 9.99998 18.031C10.322 18.031 10.609 17.868 10.792 17.622L18.207 10.207C20.561 7.85299 20.561 4.15799 18.205 1.79099C17.068 0.659987 15.574 0.0369873 13.996 0.0369873C12.513 0.0369873 11.104 0.588987 9.99998 1.59499ZM16.791 3.20499C18.354 4.77599 18.355 7.22999 16.793 8.79299L9.99998 15.586L3.20698 8.79299C1.64498 7.22999 1.64598 4.77599 3.20498 3.20899C3.96498 2.45299 4.95898 2.03699 6.00398 2.03699C7.04898 2.03699 8.03898 2.45299 8.79298 3.20699L9.29298 3.70699C9.68398 4.09799 10.316 4.09799 10.707 3.70699L11.207 3.20699C12.719 1.69799 15.281 1.70199 16.791 3.20499Z" fill="white"/>  
-                    </svg>
-                </a>
-                </li>
-                <li class="nav-item">
-                <a href="{% url 'color:view-cart' %}">
-              
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M21.822 7.431C21.635 7.161 21.328 7 21 7H7.333L6.179 4.23C5.867 3.482 5.143 3 4.333 3H2V5H4.333L9.077 16.385C9.232 16.757 9.596 17 10 17H18C18.417 17 18.79 16.741 18.937 16.352L21.937 8.352C22.052 8.044 22.009 7.7 21.822 7.431Z" fill="white"/><path d="M10.5 21C11.3284 21 12 20.3284 12 19.5C12 18.6716 11.3284 18 10.5 18C9.67157 18 9 18.6716 9 19.5C9 20.3284 9.67157 21 10.5 21Z" fill="white"/><path d="M17.5 21C18.3284 21 19 20.3284 19 19.5C19 18.6716 18.3284 18 17.5 18C16.6716 18 16 18.6716 16 19.5C16 20.3284 16.6716 21 17.5 21Z" fill="white"/></svg>
-                </a>
-                </li>
-            </ul>
-            </span>
-            <span class="navbar-text menu-wrap">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0 ul">
+
+<head>
+  {% load static %}
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
+    integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
+  <link rel="stylesheet" href="{% static 'css/slick-theme.css' %}">
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <title>{% block title %}{% endblock %}</title>
+</head>
+
+<body>
+
+  <nav class="navbar navbar-expand-lg navbar-light">
+    <div class="container-fluid pos-rel">
+      <a class="navbar-brand" href="{% url 'color:dashboard' %}">
+        <img class="img-fluid" src="{% static '/img/logo.png' %}" alt="Color Cult">
+      </a>
+
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText"
+        aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarText">
+        <span class="navbar-text log-wrap">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0 ul">
             <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="{% url 'color:dashboard' %}">Home</a>
+              {% if request.user.is_authenticated %}
+              <div class="dropdown logged-in">
+                <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Me
+                </a>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                  <a class="dropdown-item" href="{% url 'color:my-profile' %}">My Profile</a>
+                  <a class="dropdown-item" href="#">My Orders</a>
+                  <a class="dropdown-item" href="{% url 'color:wish-list' %}">My Wishlist</a>
+                  {% if request.user.is_creator %}
+                  <div class="dropdown-divider"></div>
+                  <a class="dropdown-item" href="{% url 'color:my-designs' %}">My Designs</a>
+                  <a class="dropdown-item" href="{% url 'color:my-products' %}">My Products</a>
+                  <a class="dropdown-item" href="#">My Commissions</a>
+                  {% endif %}
+                  <a class="dropdown-item login-button" href="{% url 'logout' %}">Logout</a>
+                </div>
+              </div>
+
+              {% else %}
+              <a class="login-button" href="{% url 'login' %}">Login</a>
+              {% endif %}
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="{% url 'color:about_us' %}">About</a>
+              <a href="{% url 'color:wish-list' %}">
+                <svg width="20" height="19" viewBox="0 0 20 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    d="M9.99998 1.59499C8.89598 0.588987 7.48798 0.0369873 6.00398 0.0369873C4.42598 0.0369873 2.93198 0.659987 1.79098 1.79499C-0.562019 4.15799 -0.561019 7.85399 1.79298 10.207L9.12498 17.539C9.29498 17.838 9.62298 18.031 9.99998 18.031C10.322 18.031 10.609 17.868 10.792 17.622L18.207 10.207C20.561 7.85299 20.561 4.15799 18.205 1.79099C17.068 0.659987 15.574 0.0369873 13.996 0.0369873C12.513 0.0369873 11.104 0.588987 9.99998 1.59499ZM16.791 3.20499C18.354 4.77599 18.355 7.22999 16.793 8.79299L9.99998 15.586L3.20698 8.79299C1.64498 7.22999 1.64598 4.77599 3.20498 3.20899C3.96498 2.45299 4.95898 2.03699 6.00398 2.03699C7.04898 2.03699 8.03898 2.45299 8.79298 3.20699L9.29298 3.70699C9.68398 4.09799 10.316 4.09799 10.707 3.70699L11.207 3.20699C12.719 1.69799 15.281 1.70199 16.791 3.20499Z"
+                    fill="white" />
+                </svg>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="{% url 'color:view-cart' %}">
+
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    d="M21.822 7.431C21.635 7.161 21.328 7 21 7H7.333L6.179 4.23C5.867 3.482 5.143 3 4.333 3H2V5H4.333L9.077 16.385C9.232 16.757 9.596 17 10 17H18C18.417 17 18.79 16.741 18.937 16.352L21.937 8.352C22.052 8.044 22.009 7.7 21.822 7.431Z"
+                    fill="white" />
+                  <path
+                    d="M10.5 21C11.3284 21 12 20.3284 12 19.5C12 18.6716 11.3284 18 10.5 18C9.67157 18 9 18.6716 9 19.5C9 20.3284 9.67157 21 10.5 21Z"
+                    fill="white" />
+                  <path
+                    d="M17.5 21C18.3284 21 19 20.3284 19 19.5C19 18.6716 18.3284 18 17.5 18C16.6716 18 16 18.6716 16 19.5C16 20.3284 16.6716 21 17.5 21Z"
+                    fill="white" />
+                </svg>
+              </a>
+            </li>
+          </ul>
+        </span>
+        <span class="navbar-text menu-wrap">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0 ul">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="{% url 'color:dashboard' %}">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'color:about_us' %}">About</a>
             </li>
             <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" id="shop" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <a class="nav-link dropdown-toggle" id="shop" data-toggle="dropdown" aria-haspopup="true"
+                aria-expanded="false">
                 Shop
-                </a>
-                <div class="dropdown-menu header-menu" aria-labelledby="shop">
+              </a>
+              <div class="dropdown-menu header-menu" aria-labelledby="shop">
                 <ul class="category-list ul">
-                    <h6>Products</h6>
-                    {% for get_theme_category in get_all_theme_categories %}
-                    <li><a class="dropdown-item" href="{% url 'color:search' get_theme_category.category get_theme_category.id %}">{{ get_theme_category.category }}</a></li>
-                    {% endfor %}
+                  <h6>Products</h6>
+                  {% for get_theme_category in get_all_theme_categories %}
+                  <li><a class="dropdown-item"
+                      href="{% url 'color:search' get_theme_category.category get_theme_category.id %}">{{
+                      get_theme_category.category }}</a></li>
+                  {% endfor %}
                 </ul>
                 <ul class="theme-list ul">
-                    <h6>Popular Themes</h6>
-                    {% for get_theme in get_all_themes %}
-                    <li><a class="dropdown-item" href="{% url 'color:search' get_theme.theme get_theme.id %}">{{ get_theme.theme }}</a></li>
-                    {% endfor %}
+                  <h6>Popular Themes</h6>
+                  {% for get_theme in get_all_themes %}
+                  <li><a class="dropdown-item" href="{% url 'color:search' get_theme.theme get_theme.id %}">{{
+                      get_theme.theme }}</a></li>
+                  {% endfor %}
                 </ul>
-                </div>
+              </div>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="{% url 'color:collaborate' %}">Collaborate</a>
+              <a class="nav-link" href="{% url 'color:collaborate' %}">Collaborate</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="{% url 'color:membership' %}">Membership</a>
+              <a class="nav-link" href="{% url 'color:membership' %}">Membership</a>
             </li>
-            </ul>
-            </span>
-            
-        </div>
-        </div>
-    </nav>
-    <div id="content">
-        {% block content %}{% endblock %}
+          </ul>
+        </span>
+
+      </div>
     </div>
-    <footer>
-      <div class="container-collab">
-        <div class="row">
-          <div class="col-md-3">
-            <div class="footer-title">Services</div>
-            <ul class="ul service-ul">
-              <li><a href="#">Delivery Info</a></li>
-              <li><a href="#">Return Policy</a></li>
-              <li><a href="#">Terms & Conditions</a></li>
-              <li><a href="#">Privacy Policy</a></li>
-              <li><a href="#">FAQ’s</a></li>
-            </ul>
+  </nav>
+  <div id="content">
+    {% block content %}{% endblock %}
+  </div>
+  <footer>
+    <div class="container-collab">
+      <div class="row">
+        <div class="col-md-3">
+          <div class="footer-title">Services</div>
+          <ul class="ul service-ul">
+            <li><a href="#">Delivery Info</a></li>
+            <li><a href="#">Return Policy</a></li>
+            <li><a href="#">Terms & Conditions</a></li>
+            <li><a href="#">Privacy Policy</a></li>
+            <li><a href="#">FAQ’s</a></li>
+          </ul>
+        </div>
+        <div class="col-md-3">
+          <div class="footer-title">Company</div>
+          <ul class="ul company-ul">
+            <li><a href="{% url 'color:about_us' %}">About Us</a></li>
+            <li><a href="#">Contact Us</a></li>
+            <li><a href="#">Bulk & Custom Orders</a></li>
+            <li><a href="#">Careers</a></li>
+            <li><a href="#">Blog</a></li>
+          </ul>
+        </div>
+        <div class="col-md-3">
+          <div class="footer-title">Connect</div>
+          <ul class="ul connect-ul">
+            <li>
+              <a href="#">
+                <svg width="22" height="18" viewBox="0 0 22 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    d="M21.1621 2.65593C20.3986 2.99362 19.589 3.2154 18.7601 3.31393C19.6338 2.79136 20.2878 1.96894 20.6001 0.999927C19.7801 1.48793 18.8811 1.82993 17.9441 2.01493C17.3147 1.34151 16.4804 0.89489 15.571 0.744511C14.6616 0.594133 13.728 0.748418 12.9153 1.18338C12.1026 1.61834 11.4564 2.30961 11.0772 3.14972C10.6979 3.98983 10.6068 4.93171 10.8181 5.82893C9.15516 5.74558 7.52838 5.31345 6.04334 4.56059C4.55829 3.80773 3.24818 2.75097 2.19805 1.45893C1.82634 2.09738 1.63101 2.82315 1.63205 3.56193C1.63205 5.01193 2.37005 6.29293 3.49205 7.04293C2.82806 7.02202 2.17869 6.84271 1.59805 6.51993V6.57193C1.59825 7.53763 1.93242 8.47354 2.5439 9.22099C3.15538 9.96843 4.00653 10.4814 4.95305 10.6729C4.33667 10.84 3.69036 10.8646 3.06305 10.7449C3.32992 11.5762 3.85006 12.3031 4.55064 12.824C5.25123 13.3449 6.09718 13.6337 6.97005 13.6499C6.10253 14.3313 5.10923 14.8349 4.04693 15.1321C2.98464 15.4293 1.87418 15.5142 0.779053 15.3819C2.69075 16.6114 4.91615 17.264 7.18905 17.2619C14.8821 17.2619 19.0891 10.8889 19.0891 5.36193C19.0891 5.18193 19.0841 4.99993 19.0761 4.82193C19.8949 4.23009 20.6017 3.49695 21.1631 2.65693L21.1621 2.65593Z"
+                    fill="black" />
+                </svg>
+              </a>
+            </li>
+            <li>
+              <a href="#">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    d="M10 0C12.717 0 13.056 0.00999994 14.122 0.0599999C15.187 0.11 15.912 0.277 16.55 0.525C17.21 0.779 17.766 1.123 18.322 1.678C18.8305 2.1779 19.224 2.78259 19.475 3.45C19.722 4.087 19.89 4.813 19.94 5.878C19.987 6.944 20 7.283 20 10C20 12.717 19.99 13.056 19.94 14.122C19.89 15.187 19.722 15.912 19.475 16.55C19.2247 17.2178 18.8311 17.8226 18.322 18.322C17.822 18.8303 17.2173 19.2238 16.55 19.475C15.913 19.722 15.187 19.89 14.122 19.94C13.056 19.987 12.717 20 10 20C7.283 20 6.944 19.99 5.878 19.94C4.813 19.89 4.088 19.722 3.45 19.475C2.78233 19.2245 2.17753 18.8309 1.678 18.322C1.16941 17.8222 0.775931 17.2175 0.525 16.55C0.277 15.913 0.11 15.187 0.0599999 14.122C0.0129999 13.056 0 12.717 0 10C0 7.283 0.00999994 6.944 0.0599999 5.878C0.11 4.812 0.277 4.088 0.525 3.45C0.775236 2.78218 1.1688 2.17732 1.678 1.678C2.17767 1.16923 2.78243 0.775729 3.45 0.525C4.088 0.277 4.812 0.11 5.878 0.0599999C6.944 0.0129999 7.283 0 10 0ZM10 5C8.67392 5 7.40215 5.52678 6.46447 6.46447C5.52678 7.40215 5 8.67392 5 10C5 11.3261 5.52678 12.5979 6.46447 13.5355C7.40215 14.4732 8.67392 15 10 15C11.3261 15 12.5979 14.4732 13.5355 13.5355C14.4732 12.5979 15 11.3261 15 10C15 8.67392 14.4732 7.40215 13.5355 6.46447C12.5979 5.52678 11.3261 5 10 5ZM16.5 4.75C16.5 4.41848 16.3683 4.10054 16.1339 3.86612C15.8995 3.6317 15.5815 3.5 15.25 3.5C14.9185 3.5 14.6005 3.6317 14.3661 3.86612C14.1317 4.10054 14 4.41848 14 4.75C14 5.08152 14.1317 5.39946 14.3661 5.63388C14.6005 5.8683 14.9185 6 15.25 6C15.5815 6 15.8995 5.8683 16.1339 5.63388C16.3683 5.39946 16.5 5.08152 16.5 4.75ZM10 7C10.7956 7 11.5587 7.31607 12.1213 7.87868C12.6839 8.44129 13 9.20435 13 10C13 10.7956 12.6839 11.5587 12.1213 12.1213C11.5587 12.6839 10.7956 13 10 13C9.20435 13 8.44129 12.6839 7.87868 12.1213C7.31607 11.5587 7 10.7956 7 10C7 9.20435 7.31607 8.44129 7.87868 7.87868C8.44129 7.31607 9.20435 7 10 7Z"
+                    fill="black" />
+                </svg>
+              </a>
+            </li>
+            <li>
+              <a href="#">
+                <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    d="M12.402 18V11.034H14.735L15.084 8.326H12.402V6.598C12.402 5.814 12.62 5.279 13.744 5.279H15.178V2.857C14.4838 2.78334 13.7861 2.74762 13.088 2.75C11.021 2.75 9.606 4.012 9.606 6.33V8.326H7.268V11.034H9.606V18H1C0.734784 18 0.48043 17.8946 0.292893 17.7071C0.105357 17.5196 0 17.2652 0 17V1C0 0.734784 0.105357 0.48043 0.292893 0.292893C0.48043 0.105357 0.734784 0 1 0H17C17.2652 0 17.5196 0.105357 17.7071 0.292893C17.8946 0.48043 18 0.734784 18 1V17C18 17.2652 17.8946 17.5196 17.7071 17.7071C17.5196 17.8946 17.2652 18 17 18H12.402Z"
+                    fill="black" />
+                </svg>
+              </a>
+            </li>
+            <li>
+              <a href="#">
+                <svg width="20" height="16" viewBox="0 0 20 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    d="M19.543 2.498C20 4.28 20 8 20 8C20 8 20 11.72 19.543 13.502C19.289 14.487 18.546 15.262 17.605 15.524C15.896 16 10 16 10 16C10 16 4.107 16 2.395 15.524C1.45 15.258 0.708 14.484 0.457 13.502C2.98023e-08 11.72 0 8 0 8C0 8 2.98023e-08 4.28 0.457 2.498C0.711 1.513 1.454 0.738 2.395 0.476C4.107 -1.78814e-07 10 0 10 0C10 0 15.896 -1.78814e-07 17.605 0.476C18.55 0.742 19.292 1.516 19.543 2.498ZM8 11.5L14 8L8 4.5V11.5Z"
+                    fill="black" />
+                </svg>
+              </a>
+            </li>
+          </ul>
+          <div class="footer-title">100% SECURE PAYMENT</div>
+          <ul class="ul pay-ul">
+            <li>
+              <a href="#">
+                <img src="{% static '/img/matercard.png' %}" class="img-fluid">
+              </a>
+            </li>
+            <li>
+              <a href="#">
+                <img src="{% static '/img/visa.png' %}" class="img-fluid">
+              </a>
+            </li>
+            <li>
+              <a href="#">
+                <img src="{% static '/img/mobikwik.jpg' %}" class="img-fluid">
+              </a>
+            </li>
+            <li>
+              <a href="#">
+                <img src="{% static '/img/paytm.jpg' %}" class="img-fluid">
+              </a>
+            </li>
+          </ul>
+        </div>
+        <div class="col-md-3">
+          <ul class="ul last-ul">
+            <li>
+              <a>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <g clip-path="url(#clip0)">
+                    <path
+                      d="M20.7445 1.0835C20.1925 1.0835 19.7445 1.5315 19.7445 2.0835V2.917C17.5965 1.044 14.857 0 11.9375 0C5.355 0 0 5.3745 0 11.98C0 12.532 0.448 12.98 1 12.98C1.552 12.98 2 12.532 2 11.98C2 6.477 6.458 2 11.9375 2C14.341 2 16.599 2.851 18.379 4.3795H17.4625C16.9105 4.3795 16.4625 4.8275 16.4625 5.3795C16.4625 5.9315 16.9105 6.3795 17.4625 6.3795H20.7445C21.2965 6.3795 21.7445 5.9315 21.7445 5.3795V2.0835C21.7445 1.5315 21.2965 1.0835 20.7445 1.0835Z"
+                      fill="#996BD1" />
+                    <path
+                      d="M23.0003 11.02C22.4483 11.02 22.0003 11.468 22.0003 12.02C22.0003 17.523 17.5423 22 12.0628 22C9.68733 22 7.45333 21.17 5.68333 19.675H6.64383C7.19583 19.675 7.64383 19.227 7.64383 18.675C7.64383 18.123 7.19583 17.675 6.64383 17.675H3.36133C3.35233 17.675 3.34433 17.6775 3.33583 17.6775C3.29783 17.6785 3.26033 17.6835 3.22233 17.689C3.19433 17.693 3.16633 17.6955 3.13883 17.702C3.10583 17.7095 3.07333 17.7215 3.04083 17.7325C3.01083 17.743 2.98033 17.752 2.95133 17.765C2.92383 17.7775 2.89783 17.7935 2.87133 17.8085C2.83983 17.8265 2.80883 17.844 2.77933 17.865C2.77183 17.8705 2.76333 17.8735 2.75583 17.8795C2.73883 17.8925 2.72583 17.9085 2.70983 17.9225C2.68333 17.9455 2.65683 17.9685 2.63283 17.9945C2.61033 18.0185 2.59083 18.0435 2.57133 18.069C2.55183 18.0945 2.53283 18.12 2.51533 18.147C2.49783 18.175 2.48283 18.204 2.46833 18.233C2.45383 18.2615 2.44033 18.2905 2.42883 18.3205C2.41733 18.3515 2.40833 18.3825 2.39983 18.4145C2.39183 18.445 2.38333 18.4755 2.37833 18.507C2.37233 18.5425 2.36983 18.578 2.36733 18.614C2.36583 18.6345 2.36133 18.6545 2.36133 18.6755V21.9715C2.36133 22.5235 2.80933 22.9715 3.36133 22.9715C3.91333 22.9715 4.36133 22.5235 4.36133 21.9715V21.1765C6.49283 22.991 9.19133 24 12.0628 24C18.6453 24 24.0003 18.6255 24.0003 12.02C24.0003 11.468 23.5523 11.02 23.0003 11.02Z"
+                      fill="#996BD1" />
+                    <path
+                      d="M10.1129 8.45455H9.15092L7.51776 9.52202V10.468L9.08381 9.44531H9.12216V15H10.1129V8.45455ZM14.044 15.0895C15.3608 15.0895 16.3004 14.1594 16.2972 12.8842C16.3004 11.6186 15.4183 10.6982 14.2262 10.6982C13.7404 10.6982 13.2898 10.8835 13.0341 11.1328H12.9957L13.2035 9.30149H15.9808V8.45455H12.3821L12.0146 11.7528L12.919 11.8871C13.1651 11.6665 13.6062 11.5163 14.0025 11.5163C14.7791 11.5227 15.3416 12.1044 15.3416 12.9034C15.3416 13.6896 14.7951 14.2585 14.044 14.2585C13.4112 14.2585 12.9094 13.8558 12.8583 13.2933H11.8995C11.9379 14.3352 12.8423 15.0895 14.044 15.0895Z"
+                      fill="#996BD1" />
+                  </g>
+                  <defs>
+                    <clipPath id="clip0">
+                      <rect width="24" height="24" fill="white" />
+                    </clipPath>
+                  </defs>
+                </svg>
+                <span>15 Days return policy</span>
+              </a>
+            </li>
+            <li>
+              <a>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    d="M12 0C5.38317 0 0 5.38317 0 12C0 18.6168 5.38317 24 12 24C18.6168 24 24 18.6168 24 12C24 5.38317 18.6168 0 12 0ZM12 22.5938C6.15858 22.5938 1.40625 17.8414 1.40625 12C1.40625 6.15858 6.15858 1.40625 12 1.40625C17.8414 1.40625 22.5938 6.15858 22.5938 12C22.5938 17.8414 17.8414 22.5938 12 22.5938Z"
+                    fill="#996BD1" />
+                  <path
+                    d="M16.2891 7.40625C16.6774 7.40625 16.9922 7.09144 16.9922 6.70312C16.9922 6.31481 16.6774 6 16.2891 6H7.71094C7.32263 6 7.00781 6.31481 7.00781 6.70312C7.00781 7.09144 7.32263 7.40625 7.71094 7.40625H10.6641C11.5807 7.40625 12.3623 7.99416 12.6525 8.81255H7.71094C7.32263 8.81255 7.00781 9.12736 7.00781 9.51567C7.00781 9.90398 7.32263 10.2188 7.71094 10.2188H12.6525C12.3622 11.0371 11.5807 11.625 10.664 11.625H7.75781C7.48378 11.625 7.23473 11.7842 7.1197 12.0329C7.00467 12.2816 7.04452 12.5745 7.22189 12.7833L13.0343 19.6271C13.1734 19.7909 13.3714 19.8751 13.5706 19.875C13.7315 19.875 13.8932 19.8202 14.0254 19.7078C14.3214 19.4565 14.3576 19.0127 14.1062 18.7168L9.2775 13.0312H10.6641C12.3618 13.0312 13.7823 11.8215 14.109 10.2188H16.2891C16.6774 10.2188 16.9922 9.90394 16.9922 9.51562C16.9922 9.12731 16.6774 8.8125 16.2891 8.8125H14.109C14.0031 8.29317 13.7824 7.81523 13.4746 7.4062H16.2891V7.40625Z"
+                    fill="#996BD1" />
+                </svg>
+                <span>Cash on delivery*</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <span class="foot-span">© ColorCult 2020</span>
+  </footer>
+  <!-- Login Modal -->
+  <div class="modal fade" id="login" tabindex="-1" role="dialog" aria-labelledby="loginLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-body">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M10.192 0.344238L5.94897 4.58624L1.70697 0.344238L0.292969 1.75824L4.53497 6.00024L0.292969 10.2422L1.70697 11.6562L5.94897 7.41424L10.192 11.6562L11.606 10.2422L7.36397 6.00024L11.606 1.75824L10.192 0.344238Z"
+                  fill="black" />
+              </svg>
+            </span>
+          </button>
+
+          <div class=" col-display">
+            <img src="{% static '/img/login.png' %}" class="img-fluid border-rad">
           </div>
-          <div class="col-md-3">
-            <div class="footer-title">Company</div>
-            <ul class="ul company-ul">
-              <li><a href="{% url 'color:about_us' %}">About Us</a></li>
-              <li><a href="#">Contact Us</a></li>
-              <li><a href="#">Bulk & Custom Orders</a></li>
-              <li><a href="#">Careers</a></li>
-              <li><a href="#">Blog</a></li>
-            </ul>
-          </div>
-          <div class="col-md-3">
-            <div class="footer-title">Connect</div>
-            <ul class="ul connect-ul">
-              <li>
-                <a href="#">
-                  <svg width="22" height="18" viewBox="0 0 22 18" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M21.1621 2.65593C20.3986 2.99362 19.589 3.2154 18.7601 3.31393C19.6338 2.79136 20.2878 1.96894 20.6001 0.999927C19.7801 1.48793 18.8811 1.82993 17.9441 2.01493C17.3147 1.34151 16.4804 0.89489 15.571 0.744511C14.6616 0.594133 13.728 0.748418 12.9153 1.18338C12.1026 1.61834 11.4564 2.30961 11.0772 3.14972C10.6979 3.98983 10.6068 4.93171 10.8181 5.82893C9.15516 5.74558 7.52838 5.31345 6.04334 4.56059C4.55829 3.80773 3.24818 2.75097 2.19805 1.45893C1.82634 2.09738 1.63101 2.82315 1.63205 3.56193C1.63205 5.01193 2.37005 6.29293 3.49205 7.04293C2.82806 7.02202 2.17869 6.84271 1.59805 6.51993V6.57193C1.59825 7.53763 1.93242 8.47354 2.5439 9.22099C3.15538 9.96843 4.00653 10.4814 4.95305 10.6729C4.33667 10.84 3.69036 10.8646 3.06305 10.7449C3.32992 11.5762 3.85006 12.3031 4.55064 12.824C5.25123 13.3449 6.09718 13.6337 6.97005 13.6499C6.10253 14.3313 5.10923 14.8349 4.04693 15.1321C2.98464 15.4293 1.87418 15.5142 0.779053 15.3819C2.69075 16.6114 4.91615 17.264 7.18905 17.2619C14.8821 17.2619 19.0891 10.8889 19.0891 5.36193C19.0891 5.18193 19.0841 4.99993 19.0761 4.82193C19.8949 4.23009 20.6017 3.49695 21.1631 2.65693L21.1621 2.65593Z" fill="black"/>
-                  </svg>
-                </a>
-              </li>
-              <li>
-                <a href="#">
-                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 0C12.717 0 13.056 0.00999994 14.122 0.0599999C15.187 0.11 15.912 0.277 16.55 0.525C17.21 0.779 17.766 1.123 18.322 1.678C18.8305 2.1779 19.224 2.78259 19.475 3.45C19.722 4.087 19.89 4.813 19.94 5.878C19.987 6.944 20 7.283 20 10C20 12.717 19.99 13.056 19.94 14.122C19.89 15.187 19.722 15.912 19.475 16.55C19.2247 17.2178 18.8311 17.8226 18.322 18.322C17.822 18.8303 17.2173 19.2238 16.55 19.475C15.913 19.722 15.187 19.89 14.122 19.94C13.056 19.987 12.717 20 10 20C7.283 20 6.944 19.99 5.878 19.94C4.813 19.89 4.088 19.722 3.45 19.475C2.78233 19.2245 2.17753 18.8309 1.678 18.322C1.16941 17.8222 0.775931 17.2175 0.525 16.55C0.277 15.913 0.11 15.187 0.0599999 14.122C0.0129999 13.056 0 12.717 0 10C0 7.283 0.00999994 6.944 0.0599999 5.878C0.11 4.812 0.277 4.088 0.525 3.45C0.775236 2.78218 1.1688 2.17732 1.678 1.678C2.17767 1.16923 2.78243 0.775729 3.45 0.525C4.088 0.277 4.812 0.11 5.878 0.0599999C6.944 0.0129999 7.283 0 10 0ZM10 5C8.67392 5 7.40215 5.52678 6.46447 6.46447C5.52678 7.40215 5 8.67392 5 10C5 11.3261 5.52678 12.5979 6.46447 13.5355C7.40215 14.4732 8.67392 15 10 15C11.3261 15 12.5979 14.4732 13.5355 13.5355C14.4732 12.5979 15 11.3261 15 10C15 8.67392 14.4732 7.40215 13.5355 6.46447C12.5979 5.52678 11.3261 5 10 5ZM16.5 4.75C16.5 4.41848 16.3683 4.10054 16.1339 3.86612C15.8995 3.6317 15.5815 3.5 15.25 3.5C14.9185 3.5 14.6005 3.6317 14.3661 3.86612C14.1317 4.10054 14 4.41848 14 4.75C14 5.08152 14.1317 5.39946 14.3661 5.63388C14.6005 5.8683 14.9185 6 15.25 6C15.5815 6 15.8995 5.8683 16.1339 5.63388C16.3683 5.39946 16.5 5.08152 16.5 4.75ZM10 7C10.7956 7 11.5587 7.31607 12.1213 7.87868C12.6839 8.44129 13 9.20435 13 10C13 10.7956 12.6839 11.5587 12.1213 12.1213C11.5587 12.6839 10.7956 13 10 13C9.20435 13 8.44129 12.6839 7.87868 12.1213C7.31607 11.5587 7 10.7956 7 10C7 9.20435 7.31607 8.44129 7.87868 7.87868C8.44129 7.31607 9.20435 7 10 7Z" fill="black"/>
-                  </svg>
-                </a>
-              </li>
-              <li>
-                <a href="#">
-                  <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12.402 18V11.034H14.735L15.084 8.326H12.402V6.598C12.402 5.814 12.62 5.279 13.744 5.279H15.178V2.857C14.4838 2.78334 13.7861 2.74762 13.088 2.75C11.021 2.75 9.606 4.012 9.606 6.33V8.326H7.268V11.034H9.606V18H1C0.734784 18 0.48043 17.8946 0.292893 17.7071C0.105357 17.5196 0 17.2652 0 17V1C0 0.734784 0.105357 0.48043 0.292893 0.292893C0.48043 0.105357 0.734784 0 1 0H17C17.2652 0 17.5196 0.105357 17.7071 0.292893C17.8946 0.48043 18 0.734784 18 1V17C18 17.2652 17.8946 17.5196 17.7071 17.7071C17.5196 17.8946 17.2652 18 17 18H12.402Z" fill="black"/>
-                  </svg>
-                </a>
-              </li>
-              <li>
-                <a href="#">
-                  <svg width="20" height="16" viewBox="0 0 20 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M19.543 2.498C20 4.28 20 8 20 8C20 8 20 11.72 19.543 13.502C19.289 14.487 18.546 15.262 17.605 15.524C15.896 16 10 16 10 16C10 16 4.107 16 2.395 15.524C1.45 15.258 0.708 14.484 0.457 13.502C2.98023e-08 11.72 0 8 0 8C0 8 2.98023e-08 4.28 0.457 2.498C0.711 1.513 1.454 0.738 2.395 0.476C4.107 -1.78814e-07 10 0 10 0C10 0 15.896 -1.78814e-07 17.605 0.476C18.55 0.742 19.292 1.516 19.543 2.498ZM8 11.5L14 8L8 4.5V11.5Z" fill="black"/>
-                  </svg>
-                </a>
-              </li>
-            </ul>
-            <div class="footer-title">100% SECURE PAYMENT</div>
-            <ul class="ul pay-ul">
-              <li>
-                <a href="#">
-                  <img src="{% static '/img/matercard.png' %}" class="img-fluid">
-                </a>
-              </li>
-              <li>
-                <a href="#">
-                  <img src="{% static '/img/visa.png' %}" class="img-fluid">
-                </a>
-              </li>
-              <li>
-                <a href="#">
-                  <img src="{% static '/img/mobikwik.jpg' %}" class="img-fluid">
-                </a>
-              </li>
-              <li>
-                <a href="#">
-                  <img src="{% static '/img/paytm.jpg' %}" class="img-fluid">
-                </a>
-              </li>
-            </ul>
-          </div>
-          <div class="col-md-3">
-            <ul class="ul last-ul">
-              <li>
-                <a>
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <g clip-path="url(#clip0)"><path d="M20.7445 1.0835C20.1925 1.0835 19.7445 1.5315 19.7445 2.0835V2.917C17.5965 1.044 14.857 0 11.9375 0C5.355 0 0 5.3745 0 11.98C0 12.532 0.448 12.98 1 12.98C1.552 12.98 2 12.532 2 11.98C2 6.477 6.458 2 11.9375 2C14.341 2 16.599 2.851 18.379 4.3795H17.4625C16.9105 4.3795 16.4625 4.8275 16.4625 5.3795C16.4625 5.9315 16.9105 6.3795 17.4625 6.3795H20.7445C21.2965 6.3795 21.7445 5.9315 21.7445 5.3795V2.0835C21.7445 1.5315 21.2965 1.0835 20.7445 1.0835Z" fill="#996BD1"/><path d="M23.0003 11.02C22.4483 11.02 22.0003 11.468 22.0003 12.02C22.0003 17.523 17.5423 22 12.0628 22C9.68733 22 7.45333 21.17 5.68333 19.675H6.64383C7.19583 19.675 7.64383 19.227 7.64383 18.675C7.64383 18.123 7.19583 17.675 6.64383 17.675H3.36133C3.35233 17.675 3.34433 17.6775 3.33583 17.6775C3.29783 17.6785 3.26033 17.6835 3.22233 17.689C3.19433 17.693 3.16633 17.6955 3.13883 17.702C3.10583 17.7095 3.07333 17.7215 3.04083 17.7325C3.01083 17.743 2.98033 17.752 2.95133 17.765C2.92383 17.7775 2.89783 17.7935 2.87133 17.8085C2.83983 17.8265 2.80883 17.844 2.77933 17.865C2.77183 17.8705 2.76333 17.8735 2.75583 17.8795C2.73883 17.8925 2.72583 17.9085 2.70983 17.9225C2.68333 17.9455 2.65683 17.9685 2.63283 17.9945C2.61033 18.0185 2.59083 18.0435 2.57133 18.069C2.55183 18.0945 2.53283 18.12 2.51533 18.147C2.49783 18.175 2.48283 18.204 2.46833 18.233C2.45383 18.2615 2.44033 18.2905 2.42883 18.3205C2.41733 18.3515 2.40833 18.3825 2.39983 18.4145C2.39183 18.445 2.38333 18.4755 2.37833 18.507C2.37233 18.5425 2.36983 18.578 2.36733 18.614C2.36583 18.6345 2.36133 18.6545 2.36133 18.6755V21.9715C2.36133 22.5235 2.80933 22.9715 3.36133 22.9715C3.91333 22.9715 4.36133 22.5235 4.36133 21.9715V21.1765C6.49283 22.991 9.19133 24 12.0628 24C18.6453 24 24.0003 18.6255 24.0003 12.02C24.0003 11.468 23.5523 11.02 23.0003 11.02Z" fill="#996BD1"/><path d="M10.1129 8.45455H9.15092L7.51776 9.52202V10.468L9.08381 9.44531H9.12216V15H10.1129V8.45455ZM14.044 15.0895C15.3608 15.0895 16.3004 14.1594 16.2972 12.8842C16.3004 11.6186 15.4183 10.6982 14.2262 10.6982C13.7404 10.6982 13.2898 10.8835 13.0341 11.1328H12.9957L13.2035 9.30149H15.9808V8.45455H12.3821L12.0146 11.7528L12.919 11.8871C13.1651 11.6665 13.6062 11.5163 14.0025 11.5163C14.7791 11.5227 15.3416 12.1044 15.3416 12.9034C15.3416 13.6896 14.7951 14.2585 14.044 14.2585C13.4112 14.2585 12.9094 13.8558 12.8583 13.2933H11.8995C11.9379 14.3352 12.8423 15.0895 14.044 15.0895Z" fill="#996BD1"/></g><defs><clipPath id="clip0"><rect width="24" height="24" fill="white"/></clipPath></defs>
-                  </svg>
-                  <span>15 Days return policy</span>
-                </a>
-              </li>
-              <li>
-                <a>
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M12 0C5.38317 0 0 5.38317 0 12C0 18.6168 5.38317 24 12 24C18.6168 24 24 18.6168 24 12C24 5.38317 18.6168 0 12 0ZM12 22.5938C6.15858 22.5938 1.40625 17.8414 1.40625 12C1.40625 6.15858 6.15858 1.40625 12 1.40625C17.8414 1.40625 22.5938 6.15858 22.5938 12C22.5938 17.8414 17.8414 22.5938 12 22.5938Z" fill="#996BD1"/><path d="M16.2891 7.40625C16.6774 7.40625 16.9922 7.09144 16.9922 6.70312C16.9922 6.31481 16.6774 6 16.2891 6H7.71094C7.32263 6 7.00781 6.31481 7.00781 6.70312C7.00781 7.09144 7.32263 7.40625 7.71094 7.40625H10.6641C11.5807 7.40625 12.3623 7.99416 12.6525 8.81255H7.71094C7.32263 8.81255 7.00781 9.12736 7.00781 9.51567C7.00781 9.90398 7.32263 10.2188 7.71094 10.2188H12.6525C12.3622 11.0371 11.5807 11.625 10.664 11.625H7.75781C7.48378 11.625 7.23473 11.7842 7.1197 12.0329C7.00467 12.2816 7.04452 12.5745 7.22189 12.7833L13.0343 19.6271C13.1734 19.7909 13.3714 19.8751 13.5706 19.875C13.7315 19.875 13.8932 19.8202 14.0254 19.7078C14.3214 19.4565 14.3576 19.0127 14.1062 18.7168L9.2775 13.0312H10.6641C12.3618 13.0312 13.7823 11.8215 14.109 10.2188H16.2891C16.6774 10.2188 16.9922 9.90394 16.9922 9.51562C16.9922 9.12731 16.6774 8.8125 16.2891 8.8125H14.109C14.0031 8.29317 13.7824 7.81523 13.4746 7.4062H16.2891V7.40625Z" fill="#996BD1"/>
-                  </svg>
-                  <span>Cash on delivery*</span>
-                </a>
-              </li>
-            </ul>
+          <div class="text-center col-display">
+            <div class="logo">
+              <img src="{% static '/img/login-logo.png' %}" class="img-fluid ">
+            </div>
+            <div id="login">
+              <label class="control-label login-text">Login</label>
+              <form class="form-horizontal" name="LoginForm" action="/login/" method="post">
+                {% csrf_token %}
+                <div class="control-group">
+                  <div class="controls">
+                    <input type="text" id="username" name="username" placeholder="Username">
+                  </div>
+                </div>
+                <div class="control-group">
+                  <div class="controls">
+                    <input type="password" name="password" id="password" placeholder="Password">
+                  </div>
+                </div>
+                <div class="control-group">
+                  <div class="controls">
+                    <button type="submit" class="btn">Login</button>
+                  </div>
+                </div>
+              </form>
+
+            </div>
           </div>
         </div>
       </div>
+    </div>
+  </div>
+  <!-- Register Modal -->
+  <div class="modal fade" id="register" tabindex="-1" role="dialog" aria-labelledby="registerLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-body">
 
-      <span class="foot-span">© ColorCult 2020</span>
-    </footer>
-    <!-- Login Modal -->
-    <div class="modal fade" id="login" tabindex="-1" role="dialog" aria-labelledby="loginLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-body">
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                      <span aria-hidden="true">
-                        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                          <path d="M10.192 0.344238L5.94897 4.58624L1.70697 0.344238L0.292969 1.75824L4.53497 6.00024L0.292969 10.2422L1.70697 11.6562L5.94897 7.41424L10.192 11.6562L11.606 10.2422L7.36397 6.00024L11.606 1.75824L10.192 0.344238Z" fill="black"/>
-                        </svg>
-                      </span>
-                  </button>
-          
-                  <div class=" col-display">
-                    <img src="{% static '/img/login.png' %}" class="img-fluid border-rad">
-                  </div>
-                  <div class="text-center col-display">
-                    <div class="logo">
-                      <img src="{% static '/img/login-logo.png' %}" class="img-fluid ">
+
+          <div class=" col-display">
+            <img src="{% static '/img/login.png' %}" class="img-fluid border-rad">
+          </div>
+          <div class="text-center col-display">
+            <div class="modal-header">
+              <label class="control-label login-text register">Register</label>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">
+                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      d="M10.192 0.344238L5.94897 4.58624L1.70697 0.344238L0.292969 1.75824L4.53497 6.00024L0.292969 10.2422L1.70697 11.6562L5.94897 7.41424L10.192 11.6562L11.606 10.2422L7.36397 6.00024L11.606 1.75824L10.192 0.344238Z"
+                      fill="black" />
+                  </svg>
+                </span>
+              </button>
+            </div>
+            <div id="login_reg">
+
+              <form class="form-horizontal" name="RegisterForm" action="/register/" method="post">
+                {% csrf_token %}
+                <div class="single-row">
+                  <div class="control-group">
+                    <div class="controls">
+                      <input type="text" id="first" name="first" placeholder="First Name">
                     </div>
-                    <div id="login">
-                      <label class="control-label login-text">Login</label>
-                      <form class="form-horizontal" name="LoginForm" action="/login/" method="post">
-                          {% csrf_token %}
-                          <div class="control-group">
-                              <div class="controls">
-                                  <input type="text" id="username" name="username"  placeholder="Username">
-                              </div>
-                          </div>
-                          <div class="control-group">
-                              <div class="controls">
-                                  <input type="password" name="password" id="password" placeholder="Password">
-                              </div>
-                          </div>
-                          <div class="control-group">
-                              <div class="controls">
-                                  <button type="submit" class="btn">Login</button>
-                              </div>
-                          </div>
-                      </form>
-                      
+                  </div>
+                  <div class="control-group">
+                    <div class="controls">
+                      <input type="text" id="last" name="last" placeholder="Last Name">
                     </div>
                   </div>
                 </div>
-            </div>
-        </div>
-    </div>
-    <!-- Register Modal -->
-    <div class="modal fade" id="register" tabindex="-1" role="dialog" aria-labelledby="registerLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-body">
-                    
-          
-                  <div class=" col-display">
-                    <img src="{% static '/img/login.png' %}" class="img-fluid border-rad">
-                  </div>
-                  <div class="text-center col-display">
-                  <div class="modal-header">
-                    <label class="control-label login-text register">Register</label>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                      <span aria-hidden="true">
-                        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                          <path d="M10.192 0.344238L5.94897 4.58624L1.70697 0.344238L0.292969 1.75824L4.53497 6.00024L0.292969 10.2422L1.70697 11.6562L5.94897 7.41424L10.192 11.6562L11.606 10.2422L7.36397 6.00024L11.606 1.75824L10.192 0.344238Z" fill="black"/>
-                        </svg>
-                      </span>
-                    </button>
-                  </div>
-                    <div id="login_reg">
-                      
-                      <form class="form-horizontal" name="RegisterForm" action="/register/" method="post">
-                          {% csrf_token %}
-                          <div class="single-row">
-                            <div class="control-group">
-                              <div class="controls">
-                                  <input type="text" id="first" name="first"  placeholder="First Name">
-                              </div>
-                            </div>
-                            <div class="control-group">
-                              <div class="controls">
-                                  <input type="text" id="last" name="last"  placeholder="Last Name">
-                              </div>
-                            </div>
-                          </div>
-                          <div class="control-group">
-                            <div class="controls">
-                                <input type="number" id="number" name="number"  placeholder="Mobile Number">
-                            </div>
-                          </div>
-                          <div class="control-group">
-                            <div class="controls">
-                                <input type="email" id="email" name="email"  placeholder="Email address">
-                            </div>
-                          </div>
-                          <div class="control-group">
-                              <div class="controls">
-                                  <input type="text" id="username" name="username"  placeholder="Username">
-                              </div>
-                          </div>
-                          <div class="control-group">
-                              <div class="controls">
-                                  <input type="password" name="password1" id="password1" placeholder="Password">
-                              </div>
-                          </div>
-                          <div class="control-group">
-                              <div class="controls">
-                                  <input type="password" name="password2" id="password2" placeholder="Confirm Password">
-                              </div>
-                          </div>
-                          <div class="input-group-text">
-                            <fieldset id="gender">
-                              <input type="radio" value="male" name="male">
-                              <input type="radio" value="female" name="female">
-                            </fieldset>
-                          </div>
-                          <div class="control-group">
-                              <div class="controls">
-                                  <button type="submit" class="btn">Register</button>
-                              </div>
-                          </div>
-                      </form>
-                      <div class="reg-button">
-                        <p>Already have a account ?<a  data-toggle="modal" data-target="#login">Login</a></p>
-                      </div>
-                    </div>
+                <div class="control-group">
+                  <div class="controls">
+                    <input type="number" id="number" name="number" placeholder="Mobile Number">
                   </div>
                 </div>
+                <div class="control-group">
+                  <div class="controls">
+                    <input type="email" id="email" name="email" placeholder="Email address">
+                  </div>
+                </div>
+                <div class="control-group">
+                  <div class="controls">
+                    <input type="text" id="username" name="username" placeholder="Username">
+                  </div>
+                </div>
+                <div class="control-group">
+                  <div class="controls">
+                    <input type="password" name="password1" id="password1" placeholder="Password">
+                  </div>
+                </div>
+                <div class="control-group">
+                  <div class="controls">
+                    <input type="password" name="password2" id="password2" placeholder="Confirm Password">
+                  </div>
+                </div>
+                <div class="input-group-text">
+                  <fieldset id="gender">
+                    <input type="radio" value="male" name="male">
+                    <input type="radio" value="female" name="female">
+                  </fieldset>
+                </div>
+                <div class="control-group">
+                  <div class="controls">
+                    <button type="submit" class="btn">Register</button>
+                  </div>
+                </div>
+              </form>
+              <div class="reg-button">
+                <p>Already have a account ?<a data-toggle="modal" data-target="#login">Login</a></p>
+              </div>
             </div>
+          </div>
         </div>
+      </div>
     </div>
-    
-    <!-- Optional JavaScript; choose one of the two! -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" integrity="sha384-+YQ4JLhjyBLPDQt//I+STsc9iw4uQqACwlvpslubQzn4u2UU2UFM80nGisd026JF" crossorigin="anonymous"></script>
-    <script src="{% static 'js/slick.min.js' %}"></script>
-    <script src="{% static 'js/slick.js' %}"></script>
-     <script src="{% static 'js/main.js' %}"></script>
-  </body>
+  </div>
+
+  <!-- Optional JavaScript; choose one of the two! -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+    integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+    integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js"
+    integrity="sha384-+YQ4JLhjyBLPDQt//I+STsc9iw4uQqACwlvpslubQzn4u2UU2UFM80nGisd026JF"
+    crossorigin="anonymous"></script>
+  <script src="{% static 'js/slick.min.js' %}"></script>
+  <script src="{% static 'js/slick.js' %}"></script>
+  <script src="{% static 'js/main.js' %}"></script>
+  <script src="https://code.jquery.com/ui/1.9.2/jquery-ui.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+
+
+  <script>
+
+    $(function () {
+
+      $('.prod_color').on('click', function () {
+
+        var index = $(this).index();
+        var color = document.querySelectorAll('.prod_color');
+        var color_style = color[index - 1].style.backgroundColor
+        console.log("color_style", color_style);
+
+        $('#prod_color_id').val(color_style);
+      });
+    });
+  </script>
+
+  <script>
+    $(function () {
+
+      $('.prod_size').on('click', function () {
+
+        var index = $(this).index();
+        var prod_size = document.querySelectorAll('.prod_size');
+        var prod_value = prod_size[index - 1].innerText
+        console.log("prod_value", prod_value);
+
+        $('#prod_size_id').val(prod_value);
+      });
+    });
+  </script>
+</body>
+
 </html>

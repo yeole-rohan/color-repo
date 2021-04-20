@@ -2,6 +2,9 @@
 {% block title %} Product Details | ColorCult {% endblock title %}
 {% block content %}
 {% load static %}
+
+
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css" />
     <div class="container">
         <div class="row">
             <div class="col-lg-10">
@@ -66,18 +69,20 @@
                             <div class="text-tabs">
                                 <p>Select A Size</p>
                                 {% for prod_size in get_single_product.product_size.all %}
-                                    <button class="button-tabs active"> {{ prod_size }}</button>
+                                    <button class="button-tabs active prod_size"> {{ prod_size }}</button>
                                 {% endfor %}
                             </div>
+                            <input type="hidden" name="prod_size" id="prod_size_id">
                             {% endif %}
                             {% if get_single_product.product_color.all %}
                                 <div class="colors">
                                     <p>Color</p>
                                     {% for color in get_single_product.product_color.all %}
-                                        <div class="button-tabs" style="background-color:{{ color }}"></div>
+                                        <div class="button-tabs prod_color" style="background-color:{{ color }}"></div>
                                     {% endfor %}
                                 </div>
                             {% endif %}
+                            <input type="hidden" name="prod_color" id="prod_color_id">
                             
                             <div class="text-pricing">
                                 <div class="text-normal-price">Rs. {{ get_single_product.price }} </div>
@@ -157,4 +162,6 @@
         </div>
     </div>
     <section id="your-design" class="design"></section>
+
+    
 {% endblock %}
