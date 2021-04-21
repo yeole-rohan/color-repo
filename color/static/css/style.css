@@ -99,7 +99,7 @@ footer{padding-top: 60px;background-color: #f0f0f0;margin-top: 100px;}
 .text-cat{opacity: 0.8;font-size: 16px;line-height: 24px;text-transform: capitalize;font-weight: 500;}
 .theme-text p{display: inline-block;width: 49%;font-size: 12px;opacity: 0.8;text-transform: capitalize;}
 .text-pricing > div{display: inline-block;width: auto;;text-transform: capitalize;vertical-align: middle;}
-.prod-details-text p{padding: 0;margin: 0;}
+.prod-details-text p{padding: 0;margin: 0 0 15px 0;font-weight: 500;}
 .theme-text p:first-child{text-align: left;}
 .theme-text p:last-child{text-align: right;font-weight: 500;opacity: 1;}
 .theme-text p:last-child a{color: inherit;}
@@ -109,14 +109,15 @@ footer{padding-top: 60px;background-color: #f0f0f0;margin-top: 100px;}
 .text-buttons{padding-top: 20px;}
 .text-cult-price{font-size: 14px;}
 .prod-slider{max-width: 90%;margin: auto;}
-.button-tabs{background: #FFFFFF;height:auto;width:auto;text-align:center;border: 1px solid #00000030;font-size: 14px;font-weight: 400;padding:4px 9px;margin: 0 5px;}
+.button-tabs{background: #FFFFFF;height:auto;width:auto;text-align:center;border: 2px solid #00000030;font-size: 14px;font-weight: 400;padding:4px 9px;margin: 0 5px;}
 /* .text-tabs button:first-child{border:1px solid red;} */
 .description{font-size: 14px;font-weight: 400;padding-top: 40px;word-break: break-word;}
 .description p:last-child{padding-top: 5px;}
+.text-tabs p{margin: 20px 0;}
 .description .de{font-size: 14px;font-weight: 600;}
 .similar-prod{margin-top: 110px;}
 .second-row{margin-top: 60px;}
-.colors p{margin: 20px 0 10px;}
+.colors p{margin: 20px 0px;}
 .colors>div{padding: 10px;width: auto;padding: 16px;display: inline-block;}
 .design{margin: 100px 0 120px;}
 .last-ul li svg{margin-right: 10px;}
@@ -280,3 +281,7 @@ input[type=number] {-moz-appearance: textfield;}
 #address .modal-body input, #address .modal-body textarea{background: rgba(224, 224, 224, 0.1);border: 0.5px solid rgba(0, 0, 0, 0.1);box-sizing: border-box;border-radius: 2px;margin-bottom: 20px;}
 #addressLabel{font-weight: 500;font-size: 18px;line-height: 24px;text-align: center;color: #996BD1;text-align: center;}
 #address .modal-header{display: block ruby;text-align: center;}
+#details{margin: 100px 0;}
+.colors p{font-weight: 500;}
+.colors span{font-weight: 600;}
+.color-border{border-color: #996bd1;}

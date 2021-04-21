@@ -3,7 +3,7 @@
 {% block content %}
 {% load static %}
 
-
+<section id="details">
     <div class="container">
         <div class="row">
             <div class="col-lg-10">
@@ -62,6 +62,10 @@
                                 <p>{{ get_single_product.product_theme.all | join:', ' }}</p>
                                 <p> Design by <a href="{% url 'color:user-design' get_single_product.creator.id  %}" class="creator">{{ get_single_product.creator }}</a></p>
                             </div>
+                            <div class="text-pricing">
+                                <div class="text-normal-price">Rs. {{ get_single_product.price }} </div>
+                                <div class="text-cult-price"><span>Rs. {{ get_single_product.cult_member_price }}</span> for Cult memebers</div>
+                            </div>
                             {% if  get_single_product.product_size.all %}
                             
                             
@@ -75,7 +79,7 @@
                             {% endif %}
                             {% if get_single_product.product_color.all %}
                                 <div class="colors">
-                                    <p>Color</p>
+                                    <p>Color: <span class="set-color">white</span></p>
                                     {% for color in get_single_product.product_color.all %}
                                         <div class="button-tabs prod_color" style="background-color:{{ color }}"></div>
                                     {% endfor %}
@@ -83,10 +87,7 @@
                             {% endif %}
                             <input type="hidden" name="prod_color" id="prod_color_id">
                             
-                            <div class="text-pricing">
-                                <div class="text-normal-price">Rs. {{ get_single_product.price }} </div>
-                                <div class="text-cult-price"><span>Rs. {{ get_single_product.cult_member_price }}</span> for Cult memebers</div>
-                            </div>
+                            
                             <div class="text-buttons">
                               {% if get_single_product.id in ids %}
                                 <a class="add-cart" href="{% url 'color:view-cart' %}">Go To Cart</a>
@@ -160,6 +161,7 @@
             </div>
         </div>
     </div>
+</section>
     <section id="your-design" class="design"></section>
 
     

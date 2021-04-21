@@ -68,8 +68,18 @@ $(document).ready(function(){
       var color = document.querySelectorAll('.prod_color');
       var color_style = color[index - 1].style.backgroundColor
       console.log("color_style", color_style);
-
+      $('.set-color').text(color_style)
       $('#prod_color_id').val(color_style);
+      
+      // Iterating over all elements and checking is color-border class exists if does, remove it
+      for (i = 0; i < color.length; i++) {
+        var elem = color[i];
+        if (elem.classList.contains('color-border'))
+            elem.classList.remove('color-border')
+      }
+      // add color-border to current element.
+      $(this).addClass('color-border')
+
     });
     
     $('.prod_size').on('click', function () {
@@ -78,7 +88,14 @@ $(document).ready(function(){
       var prod_size = document.querySelectorAll('.prod_size');
       var prod_value = prod_size[index - 1].innerText
       console.log("prod_value", prod_value);
-
+      console.log(prod_size)
       $('#prod_size_id').val(prod_value);
+       // Iterating over all elements and checking is color-border class exists if does, remove it
+       for (i = 0; i < prod_size.length; i++) {
+        var elem = prod_size[i];
+        if (elem.classList.contains('color-border'))
+            elem.classList.remove('color-border')
+      }
+      $(this).addClass('color-border')
     });
  });
