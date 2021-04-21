@@ -394,52 +394,12 @@
   </div>
 
   <!-- Optional JavaScript; choose one of the two! -->
-  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
-    integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
-    crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
-    integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
-    crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js"
-    integrity="sha384-+YQ4JLhjyBLPDQt//I+STsc9iw4uQqACwlvpslubQzn4u2UU2UFM80nGisd026JF"
-    crossorigin="anonymous"></script>
+  <script src="{% static 'js/jquery.min.js' %}"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js"></script>
   <script src="{% static 'js/slick.min.js' %}"></script>
   <script src="{% static 'js/slick.js' %}"></script>
   <script src="{% static 'js/main.js' %}"></script>
-  <script src="https://code.jquery.com/ui/1.9.2/jquery-ui.js"></script>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-
-
-  <script>
-
-    $(function () {
-
-      $('.prod_color').on('click', function () {
-
-        var index = $(this).index();
-        var color = document.querySelectorAll('.prod_color');
-        var color_style = color[index - 1].style.backgroundColor
-        console.log("color_style", color_style);
-
-        $('#prod_color_id').val(color_style);
-      });
-    });
-  </script>
-
-  <script>
-    $(function () {
-
-      $('.prod_size').on('click', function () {
-
-        var index = $(this).index();
-        var prod_size = document.querySelectorAll('.prod_size');
-        var prod_value = prod_size[index - 1].innerText
-        console.log("prod_value", prod_value);
-
-        $('#prod_size_id').val(prod_value);
-      });
-    });
-  </script>
 </body>
 
 </html>

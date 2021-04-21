@@ -157,8 +157,9 @@ def view_cart(request):
         else:
             product_count_in_cart=0
         shipping  = ("Free" if cart_total > 700 else 50) 
-        whole_total =  (whole_total + gst + cart_total + shipping if shipping != "Free" else whole_total + gst + cart_total)
-    
+        whole_total =  (whole_total + gst + cart_total + shipping if shipping != "Free" else whole_total + gst + cart_total) 
+        response = render(request, template_name="pages/cart.html", context={'product_object_list' : product_object_list ,'product_count_in_cart':product_count_in_cart, "cart_total" : cart_total, "gst" : gst, "whole_total" : whole_total , "shipping" : shipping, 'get_all_theme_categories' : get_all_theme_categories, 'get_all_themes' : get_all_themes})
+
         ''' Removing cart product '''
         if request.method == "POST" and "remove" in request.POST:
             prod_id = request.POST['prod-value']

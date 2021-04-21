@@ -62,5 +62,23 @@ $(document).ready(function(){
     //             console.log(res.status);
     //         }
     //     })
-    // });
-( jQuery ) });
+    $('.prod_color').on('click', function () {
+
+      var index = $(this).index();
+      var color = document.querySelectorAll('.prod_color');
+      var color_style = color[index - 1].style.backgroundColor
+      console.log("color_style", color_style);
+
+      $('#prod_color_id').val(color_style);
+    });
+    
+    $('.prod_size').on('click', function () {
+
+      var index = $(this).index();
+      var prod_size = document.querySelectorAll('.prod_size');
+      var prod_value = prod_size[index - 1].innerText
+      console.log("prod_value", prod_value);
+
+      $('#prod_size_id').val(prod_value);
+    });
+ });
