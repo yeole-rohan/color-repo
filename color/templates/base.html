@@ -96,17 +96,16 @@
               <div class="dropdown-menu header-menu" aria-labelledby="shop">
                 <ul class="category-list ul">
                   <h6>Products</h6>
+                  
                   {% for get_theme_category in get_all_theme_categories %}
                   <li><a class="dropdown-item"
-                      href="{% url 'color:search' get_theme_category.category get_theme_category.id %}">{{
-                      get_theme_category.category }}</a></li>
+                      href="{% url 'color:search' get_theme_category.category get_theme_category.id %}">{{get_theme_category.category }}</a></li>
                   {% endfor %}
                 </ul>
                 <ul class="theme-list ul">
                   <h6>Popular Themes</h6>
                   {% for get_theme in get_all_themes %}
-                  <li><a class="dropdown-item" href="{% url 'color:search' get_theme.theme get_theme.id %}">{{
-                      get_theme.theme }}</a></li>
+                  <li><a class="dropdown-item" href="{% url 'color:search' get_theme.theme get_theme.id %}">{{get_theme.theme }}</a></li>
                   {% endfor %}
                 </ul>
               </div>

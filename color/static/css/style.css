@@ -285,3 +285,6 @@ input[type=number] {-moz-appearance: textfield;}
 .colors p{font-weight: 500;}
 .colors span{font-weight: 600;}
 .color-border{border-color: #996bd1;}
+.toster-msg{position: fixed;top: 90px;right: 20px;font-size: 15px;z-index: 1031;}	
+.toster-msg .alert{padding: 7px 13px 7px 10px;}	
+.toster-msg .close{font-size: 1.2rem;margin-left: 10px}	

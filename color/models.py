@@ -171,6 +171,8 @@ class Cart(models.Model):
     user = models.ForeignKey("User", verbose_name="User Cart", on_delete=models.CASCADE)
     product = models.ForeignKey("Product", verbose_name="Product", on_delete=models.CASCADE)
     date = models.DateTimeField( auto_now=True)
+    product_size = models.CharField( max_length=100, blank=True, null=True)
+    product_color = models.CharField( max_length=100, blank=True, null=True)
 
     class Meta:
         verbose_name = "Cart"
