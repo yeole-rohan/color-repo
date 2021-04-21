@@ -208,9 +208,9 @@ def view_cart(request):
             counter=product_ids.split('|')
             ids = set(counter)
             product_object_list = Product.objects.all().filter(id__in=ids)
-            for p_obj in product_object_list:
-                add_obj_to_cart = Cart.objects.create(user=p_obj.creator, product=Product.objects.get(id=p_obj.id))
-                add_obj_to_cart.save()
+            # for p_obj in product_object_list:
+            #     add_obj_to_cart = Cart.objects.create(user=p_obj.creator, product=Product.objects.get(id=p_obj.id))
+            #     add_obj_to_cart.save()
             product_count_in_cart=len(set(counter))
             response = render(request, template_name="pages/cart.html", context={'product_object_list' : product_object_list ,'product_count_in_cart':product_count_in_cart, "cart_total" : cart_total, "gst" : gst, "whole_total" : whole_total, "shipping" : shipping, 'get_all_theme_categories' : get_all_theme_categories, 'get_all_themes' : get_all_themes})
             response.delete_cookie('product_ids')
@@ -468,7 +468,56 @@ def product_details(request, id):
     # Add product in cart, if it's not already there
     if request.method == "POST" and "cart" in request.POST:
         print('request.POST', request.POST)
-        print("prod-size", request.POST.get("prod_size"))
+        
+        prod_size = request.POST.get("prod_size")
+        prod_color = request.POST.get("prod_color")
+
+        if 'product_ids' in request.COOKIES and request.COOKIES['product_ids'] != "":
+            ids = request.COOKIES['product_ids']
+            count=ids.split('|')
+            ids = set(count)
+            print("ids", ids)
+            for i in ids:
+                print("i", i)
+                new_id.append(int(i))
+                print("new_id", new_id)
+
+        # Available product sizes
+        product_available_sizes = get_single_product.product_size.all()
+        # Available product colors
+        prod_available_colors = get_single_product.product_color.all()
+        
+        # If product has many sizes available
+        if len(product_available_sizes)>1:
+            if prod_size == '':
+                messages.error(request, "Please select a size")
+                return render(request, template_name="pages/product-details.html", context={'get_single_product' : get_single_product, 'get_images' : get_images, 'get_similar_products' : get_similar_products_by_category, 'get_similar_products_by_theme' : get_similar_products_by_theme, 'ids' : new_id, 'get_all_theme_categories' : get_all_theme_categories, 'get_all_themes' : get_all_themes, 'user_wish_list_product_id': user_wish_list_product_id})
+        # If product has only 1 size available
+        elif len(product_available_sizes)==1:
+            prod_size = product_available_sizes.values().first()['product_sizes']
+
+        # If product has no size info available
+        else:
+            prod_size = ""
+
+
+        # If product has many colors available
+        if len(prod_available_colors)>1:
+            if prod_color == '':
+                messages.error(request, "Please select a color")
+                return render(request, template_name="pages/product-details.html", context={'get_single_product' : get_single_product, 'get_images' : get_images, 'get_similar_products' : get_similar_products_by_category, 'get_similar_products_by_theme' : get_similar_products_by_theme, 'ids' : new_id, 'get_all_theme_categories' : get_all_theme_categories, 'get_all_themes' : get_all_themes, 'user_wish_list_product_id': user_wish_list_product_id})
+
+        # If product has only 1 color available
+        elif len(prod_available_colors)==1:
+            prod_color = prod_available_colors.values().first()['color']
+
+        # If product has no colors info available
+        else:
+            prod_color = ""
+
+        # Add product to cart
+        add_prod_to_cart = Cart.objects.create(user=request.user, product=Product.objects.get(id=id), product_color = prod_color, product_size = prod_size)
+        add_prod_to_cart.save()
         
         if 'product_ids' in request.COOKIES:
             product_ids = request.COOKIES['product_ids']
@@ -554,3 +603,5 @@ def membership(request):
     get_all_themes = Theme.objects.all()
 
     return render(request, template_name = 'pages/membership.html', context={'get_all_theme_categories' : get_all_theme_categories, 'get_all_themes' : get_all_themes})
+
+

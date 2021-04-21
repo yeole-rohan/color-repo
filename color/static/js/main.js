@@ -62,6 +62,7 @@ $(document).ready(function(){
     //             console.log(res.status);
     //         }
     //     })
+    
     $('.prod_color').on('click', function () {
 
       var index = $(this).index();
