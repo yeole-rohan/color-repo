@@ -80,16 +80,17 @@ footer ul li a{font-weight: 400;font-size: 14px;line-height: 22px;margin: 10px 0
 .register-now{text-align: center;}
 .prod-a{display: block;color: inherit;}
 .prod-img-wrap{height: 300px;width: 100%;margin-bottom: 10px;}
-.prod-text *, .pricing *{display: inline-block;}
+.prod-img-wrap img{width: 100%;}
+.prod-text *, .pricing *{display: block}
 .prod-text .prod-cat{float: left;font-weight: 500;text-transform: capitalize;font-size: 12px;line-height: 24px;}
 .prod-text .prod-theme{float: right;font-weight: 600;text-transform: capitalize;font-size: 12px;line-height: 20px;opacity: 0.5;}
-.pricing .normal-price{text-transform: capitalize;font-weight: 500;font-size: 16px;line-height: 26px;display: inline-block;vertical-align: middle;}
+.pricing .normal-price{text-transform: capitalize;font-weight: 500;font-size: 16px;line-height: 26px;}
 .pricing, .design-by{clear: both;}
-.pricing .cult-price{width: 80%;display: inline-block;vertical-align: middle;text-align: right;font-weight: 400;font-size: 12px;}
+.pricing .cult-price{font-weight: 400;font-size: 12px;}
 .pricing .cult-price span{color: #996BD1;font-weight: 600;}
 .design-by{font-size: 16px;line-height: 24px;font-weight: 500;padding-top: 10px;}
 .design-by .creator{text-decoration: underline;color: inherit;}
-.pricing{padding-top: 10px;display: block ruby;}
+.pricing{padding-top: 10px;}
 #cult-fav{margin: 80px 0 95px 0;}
 footer{padding-top: 60px;background-color: #f0f0f0;margin-top: 100px;}
 .prod-slider .slide-prod .prod-image-outer{display: inline-block;width: 110px;height: 145px;}

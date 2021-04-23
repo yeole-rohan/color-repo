@@ -161,15 +161,15 @@
                                     <img src="{{ get_similar_product.product_image.url }}" alt="{{ get_similar_product.prodcut_description }}" class="img-fluid h-100">
                                 </div>
                                 <div class="prod-text">
-                                    <div class="prod-cat"> {{ get_similar_product.product_theme.all | join:', ' }} </div>
-                                    <div class="prod-theme"> {{ get_similar_product.product_category.all | join:', ' }} </div>
+                                    <div class="prod-cat"> {{ get_similar_product.product_theme.first}} </div>
+                                    <div class="prod-theme"> {{ get_similar_product.product_category.first }} </div>
                                 </div>
                                 <div class="pricing">
                                     <div class="normal-price">Rs. {{ get_similar_product.price }} </div>
                                     <div class="cult-price"><span>Rs. {{ get_similar_product.cult_member_price }}</span> for Cult memebers</div>
                                 </div>
                             </a>
-                            <div class="design-by"> Design by <a class="creator">{{ get_similar_product.creator }}</a></div>
+                            <div class="design-by"> Design by <a href="{% url 'color:user-design' get_similar_product.creator.id  %}" class="creator">{{ get_similar_product.creator }}</a></div>
                         </div>
                     </div>
                 {% endfor %}
@@ -184,15 +184,15 @@
                                         <img src="{{ get_similar_product.product_image.url }}" alt="{{ get_similar_product.prodcut_description }}" class="img-fluid h-100">
                                     </div>
                                     <div class="prod-text">
-                                        <div class="prod-cat"> {{ get_similar_product.product_theme.all | join:', ' }} </div>
-                                        <div class="prod-theme"> {{ get_similar_product.product_category.all | join:', ' }} </div>
+                                        <div class="prod-cat"> {{ get_similar_product.product_theme.first }} </div>
+                                        <div class="prod-theme"> {{ get_similar_product.product_category.first }} </div>
                                     </div>
                                     <div class="pricing">
                                         <div class="normal-price">Rs. {{ get_similar_product.price }} </div>
                                         <div class="cult-price"><span>Rs. {{ get_similar_product.cult_member_price }}</span> for Cult memebers</div>
                                     </div>
                                 </a>
-                                <div class="design-by"> Design by <a class="creator">{{ get_similar_product.creator }}</a></div>
+                                <div class="design-by"> Design by <a href="{% url 'color:user-design' get_similar_product.creator.id  %}" class="creator">{{ get_similar_product.creator }}</a></div>
                             </div>
                         </div>
                     {% endfor %}
