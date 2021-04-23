@@ -246,6 +246,19 @@ class Wishlist(models.Model):
     def __str__(self):
         return str(self.product_id)
 
+class Reviews(models.Model):
+    date = models.DateTimeField(auto_now=True)
+    review_for_product = models.ForeignKey("Product", verbose_name="Product Id", on_delete=models.CASCADE)
+    review = models.CharField(max_length=150, help_text="Keep the review short and concise", verbose_name="Add your Review")
+    rating = models.PositiveIntegerField()
+    reviewer = models.ForeignKey("User", verbose_name="User who reviewed Product", on_delete=models.CASCADE)
+
+    class Meta:
+        verbose_name = "Reviews"
+        verbose_name_plural = "Reviews"
+
+    def __str__(self):
+        return self.review
 
 # PRODUCT_SIZES = [
 #     ('-', 'Not Applicable'),

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import User, Banner, HomeBanner, Theme, ThemeCategory, Product, ProductSize, Gender, FrameSize, PageSize, Image, Color, Cart, CreatorDesign, Address, Order, Wishlist
+from .models import User, Banner, HomeBanner, Theme, ThemeCategory, Product, ProductSize, Gender, FrameSize, PageSize, Image, Color, Cart, CreatorDesign, Address, Order, Wishlist, Reviews
 
 
 # Register your models here.
@@ -83,4 +83,9 @@ class OrderAdmin(admin.ModelAdmin):
 @admin.register(Wishlist)
 class WishlistAdmin(admin.ModelAdmin):
     list_display = ('user', 'date', 'product_id')
+
+@admin.register(Reviews)
+class ReviewsAdmin(admin.ModelAdmin):
+    list_display=('id', 'review', 'rating','date')
+
 
