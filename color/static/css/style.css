@@ -300,3 +300,4 @@ input[type=number] {-moz-appearance: textfield;}
 .checked {color: orange;}
 .review-wrap .rating, .review-wrap .name{display: inline-block;vertical-align: middle;}
 .review-wrap .rating {font-size: 13px;font-weight: 500;opacity: 0.4;}
+.check-availability{border: 1px solid #000000;border-radius: 4px;width: 100%;padding: 12px 0px;display: block;margin: 30px 0 0;color: #000;cursor: pointer;text-align: center;}

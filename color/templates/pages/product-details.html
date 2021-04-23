@@ -97,13 +97,13 @@
                             {% endif %}
                             {% if get_single_product.product_color.all %}
                                 <div class="colors">
-                                    <p>Color: <span class="set-color">white</span></p>
+                                    <p>Color: <span class="set-color">Choose Color</span></p>
                                     {% for color in get_single_product.product_color.all %}
                                         <div class="button-tabs prod_color" style="background-color:{{ color }}"></div>
                                     {% endfor %}
                                 </div>
                             {% endif %}
-                            
+                            <a class="check-availability">Check for Availability</a>
                             <div class="text-buttons">
                               {% if get_single_product.id in ids %}
                                 <a class="add-cart" href="{% url 'color:view-cart' %}">Go To Cart</a>
@@ -115,7 +115,7 @@
                                   <button type="submit" class="add-cart" name="cart">Add to Cart</button>
                                 </form>
                               {% endif %}
-
+                                
                               {% if request.user.is_authenticated %}
                               <a class="buy-now" href="{% url 'color:order-summary' %}">Buy Now</a>
                               {% else %}
