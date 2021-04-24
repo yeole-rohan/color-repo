@@ -5,24 +5,7 @@
 
 <section id="details">
     <div class="container">
-        <div class="toster-msg">
-            {% if messages %}
-            {% for message in messages %}
-            {% if message.tags == 'success'%}
-            <div class="alert alert-success">
-                <a class="close" href="#" data-dismiss="alert">×</a>
-                {{ message }}
-            </div>
-            {% elif message.tags == 'error'%}
-            <div class="alert alert-danger">
-                <a class="close" href="#" data-dismiss="alert">×</a>
-                {{ message }}
-            </div>
-            {% endif %}
-            {% endfor %}
-            {% endif %}
-        </div>
-
+        
         <div class="row">
             <div class="col-lg-10">
                 <div class="row">
@@ -103,7 +86,29 @@
                                     {% endfor %}
                                 </div>
                             {% endif %}
-                            <a class="check-availability">Check for Availability</a>
+                            <div class="toster-msg">
+                                {% if messages %}
+                                    {% for message in messages %}
+                                        {% if message.tags == 'success'%}
+                                            <div class="alert alert-success">
+                                                <a class="close" href="#" data-dismiss="alert">×</a>
+                                                {{ message }}
+                                            </div>
+                                        {% elif message.tags == 'error'%}
+                                            <div class="alert alert-danger">
+                                                <a class="close" href="#" data-dismiss="alert">×</a>
+                                                {{ message }}
+                                            </div>
+                                        {% endif %}
+                                    {% endfor %}
+                                {% endif %}
+                            </div>
+                            {% if get_single_product.quantity <= 0 %}
+                                <a class="check-availability">Not Available</a>
+                            {% else %}
+                               <a class="check-availability">Available</a>
+                            {% endif %}
+                           
                             <div class="text-buttons">
                               {% if get_single_product.id in ids %}
                                 <a class="add-cart" href="{% url 'color:view-cart' %}">Go To Cart</a>

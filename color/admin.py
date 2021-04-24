@@ -42,7 +42,7 @@ class ProductAdmin(admin.ModelAdmin):
         obj.save()
         for image in request.FILES.getlist('image_multiple'):
             obj.product.create(product = image)
-    list_display = ('id', 'creator', 'prodcut_description', 'cult_member_price', 'price')
+    list_display = ('id', 'creator', 'prodcut_description', 'cult_member_price', 'price', 'quantity', 'date')
 
 @admin.register(ProductSize)
 class ProductSizeAdmin(admin.ModelAdmin):
