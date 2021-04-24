@@ -406,16 +406,19 @@ def dashboard(request):
     response = render(request, template_name='dashboard.html', context={'get_all_theme_categories' : get_all_theme_categories, 'get_replaceable_banners' : get_replaceable_banner, 'get_home_banners' : get_home_banners, 'get_all_themes' : get_all_themes, 'get_cult_favs' : get_cult_favs, 'get_six_themes' : get_six_themes, 'get_six_theme_categories' : get_six_theme_categories })
     response.delete_cookie('usename')
     return response 
- 
+
+
+# GET PRODUCT DETAILS
 def product_details(request, id):
+    # Get themes category
     get_all_theme_categories = ThemeCategory.objects.all() 
+    # Get product reviews
     get_product_reviews = Reviews.objects.filter(review_for_product=id)
-    print(get_all_theme_categories)
+    # Get themes
     get_all_themes = Theme.objects.all()
-    print(get_all_themes)
-    # When user wants to remove the product from wishlist
+
+    # Remove the product from wishlist
     if request.method=="POST" and "wish-full" in request.POST:
-        print(request.POST)
         if request.user.is_authenticated:
             wish_list = Wishlist.objects.filter(user=request.user, product_id = id)
             wish_list.delete()
@@ -425,30 +428,23 @@ def product_details(request, id):
     except:
         pass
 
-    # When user wants to add the product in wishlist
+
+    # Add the product in wishlist
     if request.method=="POST" and "wish-list" in request.POST:
-        print("printing color with request", request.POST)
         if request.user.is_authenticated:
             wish_list = Wishlist.objects.create(user=request.user, product_id = id)
             wish_list.save()
-            print(wish_list)
 
     # For Showing the product details and similar products
     get_single_product = Product.objects.get(id=id)
-    print('get_single_product',get_single_product)
     get_images = Image.objects.filter(product_for=get_single_product.id)
-    print('get_images', get_images)
     single_cat = []
     single_theme = []
     for get_cat in get_single_product.product_category.all():
-        print('get_cat', get_cat)
         single_cat.append(get_cat)
-        print('single_cat', single_cat)
     
     for get_theme in get_single_product.product_theme.all():
-        print('get_theme', get_theme)
         single_theme.append(get_theme)
-        print('single_theme', single_theme)
     get_similar_products_by_category = Product.objects.filter(product_category = single_cat[0]).exclude(id=id).order_by('-id')[:4]
     get_similar_products_by_theme = Product.objects.filter(product_theme = single_theme[0]).exclude(id=id).order_by('-id')[:4]
     ids = ''
@@ -459,17 +455,12 @@ def product_details(request, id):
         ids = request.COOKIES['product_ids']
         count=ids.split('|')
         ids = set(count)
-        print("ids", ids)
         for i in ids:
-            print("i", i)
             new_id.append(int(i))
-            print("new_id", new_id)
     response = render(request, template_name="pages/product-details.html", context={'get_single_product' : get_single_product, 'get_images' : get_images, 'get_similar_products' : get_similar_products_by_category, 'get_similar_products_by_theme' : get_similar_products_by_theme, 'ids' : new_id, 'get_all_theme_categories' : get_all_theme_categories, 'get_all_themes' : get_all_themes, 'user_wish_list_product_id': user_wish_list_product_id, 'get_product_reviews' : get_product_reviews})
 
     # Add product in cart, if it's not already there
     if request.method == "POST" and "cart" in request.POST:
-        print('request.POST', request.POST)
-        
         prod_size = request.POST.get("prod_size")
         prod_color = request.POST.get("prod_color")
 
@@ -477,11 +468,8 @@ def product_details(request, id):
             ids = request.COOKIES['product_ids']
             count=ids.split('|')
             ids = set(count)
-            print("ids", ids)
             for i in ids:
-                print("i", i)
                 new_id.append(int(i))
-                print("new_id", new_id)
 
         # Available product sizes
         product_available_sizes = get_single_product.product_size.all()
@@ -506,7 +494,7 @@ def product_details(request, id):
         if len(prod_available_colors)>1:
             if prod_color == '':
                 messages.error(request, "Please select a color")
-                return render(request, template_name="pages/product-details.html", context={'get_single_product' : get_single_product, 'get_images' : get_images, 'get_similar_products' : get_similar_products_by_category, 'get_similar_products_by_theme' : get_similar_products_by_theme, 'ids' : new_id, 'get_all_theme_categories' : get_all_theme_categories, 'get_all_themes' : get_all_themes, 'user_wish_list_product_id': user_wish_list_product_id})
+                return render(request, template_name="pages/product-details.html", context={'get_single_product' : get_single_product, 'get_images' : get_images, 'get_similar_products' : get_similar_products_by_category, 'get_similar_products_by_theme' : get_similar_products_by_theme, 'ids' : new_id, 'get_all_theme_categories' : get_all_theme_categories, 'get_all_themes' : get_all_themes, 'user_wish_list_product_id': user_wish_list_product_id, 'get_product_reviews' : get_product_reviews})
 
         # If product has only 1 color available
         elif len(prod_available_colors)==1:
@@ -519,7 +507,7 @@ def product_details(request, id):
         # Add product to cart
         add_prod_to_cart = Cart.objects.create(user=request.user, product=Product.objects.get(id=id), product_color = prod_color, product_size = prod_size)
         add_prod_to_cart.save()
-        
+
         if 'product_ids' in request.COOKIES:
             product_ids = request.COOKIES['product_ids']
             if product_ids=="":
