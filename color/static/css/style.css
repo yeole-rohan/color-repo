@@ -293,7 +293,7 @@ input[type=number] {-moz-appearance: textfield;}
 .reviews h3 span{font-size: 14px;font-weight: 400;opacity: 0.5;}
 .review-wrap .name, .review-wrap .review-des{font-weight: 400;font-size: 14px;opacity: 0.8;}
 .review-wrap .review-date{opacity: 0.3;font-size: 11px;font-weight: 400;}
-.more-review{position: relative;text-align: center;color: #000;display: block;font-weight: 500;}
+.more-review{position: relative;text-align: center;color: #000;display: block;font-weight: 500;cursor: pointer;}
 .more-review::before{position: absolute;content: '';left: 0;width: 28%;height: 1px;background-color: #000;opacity: 0.1;top: 50%;transform: translateY(-50%);}
 .more-review::after{position: absolute;content: '';right: 0;width: 28%;height: 1px;background-color: #000;opacity: 0.1;top: 50%;transform: translateY(-50%);}
 .reviews{margin-top: 60px;}
@@ -301,3 +301,5 @@ input[type=number] {-moz-appearance: textfield;}
 .review-wrap .rating, .review-wrap .name{display: inline-block;vertical-align: middle;}
 .review-wrap .rating {font-size: 13px;font-weight: 500;opacity: 0.4;}
 .check-availability{border: 1px solid #000000;border-radius: 4px;width: 100%;padding: 12px 0px;display: block;margin: 30px 0 0;color: #000;cursor: pointer;text-align: center;}
+.review-wrap{margin-top: 30px;}
+.reviews{max-height: 185px;overflow: hidden;}

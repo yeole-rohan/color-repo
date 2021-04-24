@@ -1,6 +1,10 @@
 var $ = jQuery.noConflict();
 
 $(document).ready(function(){
+  $('.more-review').on('click', function(){
+    $('.reviews').css('max-height', '100%');
+    $(this).css('display', 'none');
+  })
     $('#id_design_description').attr('rows', '4')
     $("#upload-submit").attr("disabled", "true")
     $( "#id_design_image" ).change(function() {

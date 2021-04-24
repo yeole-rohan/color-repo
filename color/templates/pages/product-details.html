@@ -127,22 +127,27 @@
                                 <p class="de">Description</p>
                                 <p>{{ get_single_product.prodcut_description }}</p>
                             </div>
+                            
                             <div class="reviews">
-                                <h3> Reviews <span>(10)</span></h3>
-                                <div class="review-wrap">
-                                    <div class="user-name">
-                                        <p class="name">Cody Fisher</p>
-                                        <p class="rating"><span class="fa fa-star checked"></span> 4.3</p>
+                                <h3> Reviews <span>({{get_product_reviews.count}})</span></h3>
+                                {% for review in get_product_reviews %}
+                                    <div class="review-wrap" id="review-wrap">
+                                        <div class="user-name">
+                                            <p class="name">{{ review.reviewer }}</p>
+                                            <p class="rating"><span class="fa fa-star checked"></span> {{review.rating}}</p>
+                                        </div>
+                                        <div class="review-des">
+                                            <p>{{review.review}}</p>
+                                        </div>
+                                        <div class="review-date">
+                                            <span>{{review.date}}</span>
+                                        </div>
                                     </div>
-                                    <div class="review-des">
-                                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod t.</p>
-                                    </div>
-                                    <div class="review-date">
-                                        <span>Published 1 week ago</span>
-                                    </div>
-                                </div>
-                                <a class="more-review">Read More Reviews</a>
+                                {% endfor %}
                             </div>
+                             {% if get_product_reviews.count > 1 %}
+                                <a class="more-review">Read More Reviews</a>
+                            {% endif %}
                         </div>
                     </div>
                 </div>

@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .models import Banner, HomeBanner, ThemeCategory, Theme, Product, Image, Cart, User, CreatorDesign, Address, Order, Wishlist
+from .models import Banner, HomeBanner, ThemeCategory, Theme, Product, Image, Cart, User, CreatorDesign, Address, Order, Wishlist, Reviews
 from .forms import RegisterUser, CreatorDesignForm, UpdateProfile, AddressForm, CollaborateForm
 from django.contrib.auth.forms import AuthenticationForm,PasswordChangeForm
 from django.http import JsonResponse
@@ -408,7 +408,8 @@ def dashboard(request):
     return response 
  
 def product_details(request, id):
-    get_all_theme_categories = ThemeCategory.objects.all()
+    get_all_theme_categories = ThemeCategory.objects.all() 
+    get_product_reviews = Reviews.objects.filter(review_for_product=id)
     print(get_all_theme_categories)
     get_all_themes = Theme.objects.all()
     print(get_all_themes)
@@ -463,7 +464,7 @@ def product_details(request, id):
             print("i", i)
             new_id.append(int(i))
             print("new_id", new_id)
-    response = render(request, template_name="pages/product-details.html", context={'get_single_product' : get_single_product, 'get_images' : get_images, 'get_similar_products' : get_similar_products_by_category, 'get_similar_products_by_theme' : get_similar_products_by_theme, 'ids' : new_id, 'get_all_theme_categories' : get_all_theme_categories, 'get_all_themes' : get_all_themes, 'user_wish_list_product_id': user_wish_list_product_id})
+    response = render(request, template_name="pages/product-details.html", context={'get_single_product' : get_single_product, 'get_images' : get_images, 'get_similar_products' : get_similar_products_by_category, 'get_similar_products_by_theme' : get_similar_products_by_theme, 'ids' : new_id, 'get_all_theme_categories' : get_all_theme_categories, 'get_all_themes' : get_all_themes, 'user_wish_list_product_id': user_wish_list_product_id, 'get_product_reviews' : get_product_reviews})
 
     # Add product in cart, if it's not already there
     if request.method == "POST" and "cart" in request.POST:
@@ -491,7 +492,7 @@ def product_details(request, id):
         if len(product_available_sizes)>1:
             if prod_size == '':
                 messages.error(request, "Please select a size")
-                return render(request, template_name="pages/product-details.html", context={'get_single_product' : get_single_product, 'get_images' : get_images, 'get_similar_products' : get_similar_products_by_category, 'get_similar_products_by_theme' : get_similar_products_by_theme, 'ids' : new_id, 'get_all_theme_categories' : get_all_theme_categories, 'get_all_themes' : get_all_themes, 'user_wish_list_product_id': user_wish_list_product_id})
+                return render(request, template_name="pages/product-details.html", context={'get_single_product' : get_single_product, 'get_images' : get_images, 'get_similar_products' : get_similar_products_by_category, 'get_similar_products_by_theme' : get_similar_products_by_theme, 'ids' : new_id, 'get_all_theme_categories' : get_all_theme_categories, 'get_all_themes' : get_all_themes, 'user_wish_list_product_id': user_wish_list_product_id, 'get_product_reviews' : get_product_reviews})
         # If product has only 1 size available
         elif len(product_available_sizes)==1:
             prod_size = product_available_sizes.values().first()['product_sizes']
