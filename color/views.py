@@ -131,7 +131,8 @@ def view_cart(request):
     gst = 0
     whole_total = 0
     shipping = ''
-    product_object_list = ''
+    product_object_list = []
+    get_images = []
     product_count_in_cart = 0
     product_id_in_cart = ''
     if not request.user.is_authenticated:
@@ -203,44 +204,45 @@ def view_cart(request):
     cart_list = []
     product_list = []
     if request.user.is_authenticated:
-        if 'product_ids' in request.COOKIES:
-            product_ids = request.COOKIES['product_ids']
-            counter=product_ids.split('|')
-            ids = set(counter)
-            product_object_list = Product.objects.all().filter(id__in=ids)
-            # for p_obj in product_object_list:
-            #     add_obj_to_cart = Cart.objects.create(user=p_obj.creator, product=Product.objects.get(id=p_obj.id))
-            #     add_obj_to_cart.save()
-            product_count_in_cart=len(set(counter))
-            response = render(request, template_name="pages/cart.html", context={'product_object_list' : product_object_list ,'product_count_in_cart':product_count_in_cart, "cart_total" : cart_total, "gst" : gst, "whole_total" : whole_total, "shipping" : shipping, 'get_all_theme_categories' : get_all_theme_categories, 'get_all_themes' : get_all_themes})
-            response.delete_cookie('product_ids')
-            return response
+        print("request.user.id", request.user.id)
+        cart_objects = Cart.objects.filter(user=request.user.id).values()
+        if len(cart_objects)> 0:
+            for product in cart_objects:
+                product_data = Product.objects.filter(id=product['product_id']).values().first()
+                product_object_list.append(product_data)
+                product_img = Image.objects.filter(product_for=product['product_id'])
+                get_images.append(product_img)
+        print("product_object_list",product_object_list)
+        product_count_in_cart= Cart.objects.filter(user=request.user.id).count()
+        print("product_count_in_cart",product_count_in_cart)
+        response = render(request, template_name="pages/cart.html", context={'product_object_list' : product_object_list ,'product_count_in_cart':product_count_in_cart, 'get_images': get_images, "cart_total" : cart_total, "gst" : gst, "whole_total" : whole_total, "shipping" : shipping, 'get_all_theme_categories' : get_all_theme_categories, 'get_all_themes' : get_all_themes})
+        return response
+        
+        if request.method == "POST" and "remove" in request.POST:
+            prod_id = request.POST.get("prod-value")
+            get_product = Cart.objects.filter(product_id = prod_id)
+            get_product.delete()
+            get_cart = Cart.objects.filter(user=request.user)
+            print(get_cart)
+            for cart in get_cart:
+                cart_list.append(cart)
+            for p in cart_list:
+                print(type(p.product))
+                id = str(p.product)
+                print(type(id))
+                get_product = Product.objects.get(id=id)
+                product_list.append(get_product)
+                cart_total = cart_total + get_product.price
+                if get_product.price > 1000:
+                    price_gst = int((get_product.price/100)*12)
+                    gst = gst + price_gst
+                    print("above 1000 {}".format(gst))
+                else:
+                    price_gst = int((get_product.price/100)*5)
+                    print("gst cal {}".format(price_gst))
+                    gst = gst + price_gst
+            print(product_list)
         else:
-            if request.method == "POST" and "remove" in request.POST:
-                prod_id = request.POST['prod-value']
-                get_product = Cart.objects.filter(product_id = prod_id)
-                get_product.delete()
-                get_cart = Cart.objects.filter(user=request.user)
-                print(get_cart)
-                for cart in get_cart:
-                    cart_list.append(cart)
-                for p in cart_list:
-                    print(type(p.product))
-                    id = str(p.product)
-                    print(type(id))
-                    get_product = Product.objects.get(id=id)
-                    product_list.append(get_product)
-                    cart_total = cart_total + get_product.price
-                    if get_product.price > 1000:
-                        price_gst = int((get_product.price/100)*12)
-                        gst = gst + price_gst
-                        print("above 1000 {}".format(gst))
-                    else:
-                        price_gst = int((get_product.price/100)*5)
-                        print("gst cal {}".format(price_gst))
-                        gst = gst + price_gst
-                print(product_list)
-            else:
                 get_cart = Cart.objects.filter(user=request.user)
                 for cart in get_cart:
                     cart_list.append(cart)
@@ -266,29 +268,65 @@ def view_cart(request):
     return render(request, template_name="pages/cart.html", context={'product_object_list' : product_object_list ,'product_count_in_cart':product_count_in_cart, "cart_total" : cart_total, "gst" : gst, "whole_total" : whole_total, "shipping" : shipping, 'get_all_theme_categories' : get_all_theme_categories, 'get_all_themes' : get_all_themes})
 
 def wish_list(request):
-    if request.method == "POST" and "remove" in request.POST:
-        prod_id = request.POST["prod-value"]
-        get_product = Wishlist.objects.filter(product_id = prod_id)
-        get_product.delete()
-
-    if request.method == "POST" and "move-to-cart" in request.POST:
-        prod_id = request.POST["move-value-cart"]
-        prod_obj = Product.objects.get(id=prod_id)
-        added_to_cart = Cart.objects.create(user=request.user, product=Product.objects.get(id=prod_id))
-        added_to_cart.save()
-        get_product = Wishlist.objects.filter(product_id = prod_id)
-        get_product.delete()
-
+    wish_list_product = []
+    wish_list_count = 0
     get_all_theme_categories = ThemeCategory.objects.all()
     get_all_themes = Theme.objects.all()
     get_home_banners = HomeBanner.objects.first()
-    wish_list_count = Wishlist.objects.filter(user=request.user.id).count()
-    all_wish_list_for_current_user = Wishlist.objects.filter(user=request.user.id)
-    wish_list_product = []
-    for wish_list in all_wish_list_for_current_user:
-        product = Product.objects.filter(id=wish_list.product_id)
-        wish_list_product.append(product)
-    print(wish_list_product)
+    # For logged in users
+    if request.user.is_authenticated:
+        if request.method == "POST" and "remove" in request.POST:
+            prod_id = request.POST["prod-value"]
+            get_product = Wishlist.objects.filter(product_id = prod_id)
+            get_product.delete()
+
+        if request.method == "POST" and "move-to-cart" in request.POST:
+            prod_id = request.POST["move-value-cart"]
+            prod_obj = Product.objects.get(id=prod_id)
+            added_to_cart = Cart.objects.create(user=request.user, product=Product.objects.get(id=prod_id))
+            added_to_cart.save()
+            get_product = Wishlist.objects.filter(product_id = prod_id)
+            get_product.delete()
+
+        
+        wish_list_count = Wishlist.objects.filter(user=request.user.id).count()
+        all_wish_list_for_current_user = Wishlist.objects.filter(user=request.user.id)
+        for wish_list in all_wish_list_for_current_user:
+            product = Product.objects.filter(id=wish_list.product_id)
+            wish_list_product.append(product)
+        print(wish_list_product)
+
+    # For unauthenticated users
+    else:
+        if 'product_ids' in request.COOKIES: 
+            product_ids = request.COOKIES['product_ids']
+            print()
+            counter=product_ids.split('|')
+            ids = set(counter)
+            print("product_ids ..........",ids)
+            for product_id in ids:
+                product = Product.objects.filter(id= int(product_id))
+                wish_list_product.append(product)
+            print("wish_list_product......", wish_list_product)
+            wish_list_count=len(set(counter))
+
+            response = render(request, template_name="pages/wish-list.html", context={'get_home_banners' : get_home_banners, 'get_all_theme_categories' : get_all_theme_categories, 'get_all_themes' : get_all_themes, 'wish_list_count' : wish_list_count, 'wish_list_product' : wish_list_product})
+        if request.method == "POST" and "remove" in request.POST:
+            print("hiiiiiiiiiiiii")
+            prod_id = request.POST["prod-value"]
+            if 'product_ids' in request.COOKIES:
+                product_ids = request.COOKIES['product_ids']
+                print("product_ids before", product_ids)
+                product_id_in_wishlist=product_ids.split('|')
+                print("product_id_in_wishlist before 1", product_id_in_wishlist)
+                product_id_in_wishlist=list(set(product_id_in_wishlist))
+                print("product_id_in_wishlist before 2", product_id_in_wishlist)
+                product_id_in_wishlist.remove(str(prod_id))
+                print("product_id_in_wishlist after", product_id_in_wishlist)
+                response.delete_cookie('product_ids')
+                return response
+                #response.set_cookie('product_ids',product_id_in_wishlist)
+                print("product_ids after", request.COOKIES['product_ids'])
     response = render(request, template_name="pages/wish-list.html", context={'get_home_banners' : get_home_banners, 'get_all_theme_categories' : get_all_theme_categories, 'get_all_themes' : get_all_themes, 'wish_list_count' : wish_list_count, 'wish_list_product' : wish_list_product})
     return response
     # render(request, template_name="pages/wish-list.html", context={})
@@ -417,23 +455,22 @@ def product_details(request, id):
     # Get themes
     get_all_themes = Theme.objects.all()
 
-    # Remove the product from wishlist
-    if request.method=="POST" and "wish-full" in request.POST:
-        if request.user.is_authenticated:
-            wish_list = Wishlist.objects.filter(user=request.user, product_id = id)
-            wish_list.delete()
     user_wish_list_product_id = ''
     try:
-        user_wish_list_product_id = Wishlist.objects.filter(user=request.user, product_id = id)
+        if request.user.is_authenticated:
+            user_wish_list_product_id = Wishlist.objects.filter(user=request.user, product_id = id)
+            print(user_wish_list_product_id)
+        else:
+            if 'product_ids' in request.COOKIES: 
+                product_ids = request.COOKIES['product_ids']
+                counter=product_ids.split('|')
+                ids = set(counter)
+                print("ids..........",ids)
+                for i in ids:
+                    if i == str(id):
+                        user_wish_list_product_id = id
     except:
         pass
-
-
-    # Add the product in wishlist
-    if request.method=="POST" and "wish-list" in request.POST:
-        if request.user.is_authenticated:
-            wish_list = Wishlist.objects.create(user=request.user, product_id = id)
-            wish_list.save()
 
     # For Showing the product details and similar products
     get_single_product = Product.objects.get(id=id)
@@ -451,26 +488,64 @@ def product_details(request, id):
     new_id = []
     
     # Get all the products which are already added in cart
-    if 'product_ids' in request.COOKIES:
-        ids = request.COOKIES['product_ids']
-        count=ids.split('|')
-        ids = set(count)
-        for i in ids:
-            new_id.append(int(i))
+    cart_objects = Cart.objects.filter(user=request.user.id).values()
+    for cart in cart_objects:
+        product_id = cart['product_id']
+        new_id.append(int(product_id))
+    
     response = render(request, template_name="pages/product-details.html", context={'get_single_product' : get_single_product, 'get_images' : get_images, 'get_similar_products' : get_similar_products_by_category, 'get_similar_products_by_theme' : get_similar_products_by_theme, 'ids' : new_id, 'get_all_theme_categories' : get_all_theme_categories, 'get_all_themes' : get_all_themes, 'user_wish_list_product_id': user_wish_list_product_id, 'get_product_reviews' : get_product_reviews})
 
+
+    # Remove the product from wishlist
+    if request.method=="POST" and "wish-full" in request.POST:
+        if request.user.is_authenticated:
+            wish_list = Wishlist.objects.filter(user=request.user, product_id = id)
+            wish_list.delete()
+        else:
+            if 'product_ids' in request.COOKIES:
+                product_ids = request.COOKIES['product_ids']
+                print("product_ids before", product_ids)
+                product_id_in_wishlist=product_ids.split('|')
+                product_id_in_wishlist=list(set(product_id_in_wishlist))
+                product_id_in_wishlist.remove(str(id))
+                response.delete_cookie('product_ids')
+                return response
+                #response.set_cookie('product_ids',product_id_in_wishlist)
+                print("product_ids after", product_ids)
+
+
+    # Add the product in wishlist
+    if request.method=="POST" and "wish-list" in request.POST:
+        # If user logged in then add item in wish list in database
+        if request.user.is_authenticated:
+            wish_list = Wishlist.objects.create(user=request.user, product_id = id)
+            wish_list.save()
+        # If user is not logged in then add item in browsers cookies
+        else:
+            if 'product_ids' in request.COOKIES:
+                product_ids = request.COOKIES['product_ids']
+                if product_ids=="":
+                    product_ids=str(id)
+                    response.set_cookie('product_ids', product_ids)
+                else:
+                    product_ids=product_ids+"|"+str(id)
+                    response.set_cookie('product_ids', product_ids)
+            else:
+                response.set_cookie('product_ids', id)
+            return response
+
+    
     # Add product in cart, if it's not already there
     if request.method == "POST" and "cart" in request.POST:
         prod_size = request.POST.get("prod_size")
         prod_color = request.POST.get("prod_color")
 
-        if 'product_ids' in request.COOKIES and request.COOKIES['product_ids'] != "":
-            ids = request.COOKIES['product_ids']
-            count=ids.split('|')
-            ids = set(count)
-            for i in ids:
-                new_id.append(int(i))
-
+        # Get all the products which are already added in cart
+        cart_objects = Cart.objects.filter(user=request.user.id).values()
+        for cart in cart_objects:
+            product_id = cart['product_id']
+            new_id.append(int(product_id))
+    
         # Available product sizes
         product_available_sizes = get_single_product.product_size.all()
         # Available product colors
@@ -508,16 +583,6 @@ def product_details(request, id):
         add_prod_to_cart = Cart.objects.create(user=request.user, product=Product.objects.get(id=id), product_color = prod_color, product_size = prod_size)
         add_prod_to_cart.save()
 
-        if 'product_ids' in request.COOKIES:
-            product_ids = request.COOKIES['product_ids']
-            if product_ids=="":
-                product_ids=str(id)
-                response.set_cookie('product_ids', product_ids)
-            else:
-                product_ids=product_ids+"|"+str(id)
-                response.set_cookie('product_ids', product_ids)
-        else:
-            response.set_cookie('product_ids', id)
         return response
     return response
 

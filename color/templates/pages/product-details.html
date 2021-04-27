@@ -11,7 +11,7 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="img-slider">
-                        {% if request.user.is_authenticated %}
+                            {{ user_wish_list_product_id}}
                             {% if user_wish_list_product_id %}
                                 <form method="POST" >
                                     {% csrf_token %}
@@ -23,12 +23,7 @@
                                     <button type="submit" class="wish" name="wish-list"><svg id="paths" class="" width="20" height="19" viewBox="0 0 20 19" fill="none" xmlns="http://www.w3.org/2000/svg"><path id="path" d="M18.205 1.79099C17.068 0.659987 15.574 0.0369873 13.996 0.0369873C12.513 0.0369873 11.104 0.588987 9.99998 1.59499C8.89598 0.588987 7.48798 0.0369873 6.00398 0.0369873C4.42598 0.0369873 2.93198 0.659987 1.79098 1.79499C-0.562019 4.15799 -0.561019 7.85399 1.79298 10.207L9.99998 18.414L18.207 10.207C20.561 7.85399 20.562 4.15799 18.205 1.79099Z" fill="black"/></svg></button>
                                 </form>
                             {% endif %}
-                         {% else %}
-                            <a href="{% url 'login' %}?next={{request.path}}" class="not-wish">
-                                <svg id="paths" class="" width="20" height="19" viewBox="0 0 20 19" fill="none" xmlns="http://www.w3.org/2000/svg"><path id="path" d="M18.205 1.79099C17.068 0.659987 15.574 0.0369873 13.996 0.0369873C12.513 0.0369873 11.104 0.588987 9.99998 1.59499C8.89598 0.588987 7.48798 0.0369873 6.00398 0.0369873C4.42598 0.0369873 2.93198 0.659987 1.79098 1.79499C-0.562019 4.15799 -0.561019 7.85399 1.79298 10.207L9.99998 18.414L18.207 10.207C20.561 7.85399 20.562 4.15799 18.205 1.79099Z" fill="black"/>
-                                </svg>
-                            </a>
-                        {% endif %}
+
                             {% if get_images %}
                                 <div class="main-img">
                                     {% for get_image in get_images %}
@@ -108,7 +103,8 @@
                             {% else %}
                                <a class="check-availability">Available</a>
                             {% endif %}
-                           
+                            
+                            
                             <div class="text-buttons">
                               {% if get_single_product.id in ids %}
                                 <a class="add-cart" href="{% url 'color:view-cart' %}">Go To Cart</a>
@@ -116,14 +112,19 @@
                                 {% if get_single_product.quantity <= 0 %}
                                     <button type="submit" class="add-cart" name="cart">Can't add to Cart</button>
                                 {% else %}
+                                {% if request.user.is_authenticated %}
                                     <form method="POST">
                                     {% csrf_token %}
                                     <input type="hidden" name="prod_size" id="prod_size_id">
                                     <input type="hidden" name="prod_color" id="prod_color_id">
                                     <button type="submit" class="add-cart" name="cart">Add to Cart</button>
                                     </form>
+                                {% else %}
+                                <a class="add-cart" href="{% url 'login' %}?next={{request.path}}">Add to Cart</a>
+                                {% endif %}
                                 {% endif %}
                               {% endif %}
+                              
                             
                               {% if request.user.is_authenticated %}
                                 <a class="buy-now" href="{% if get_single_product.quantity <= 0 %}#{% else %}{% url 'color:order-summary' %}{% endif %}">Buy Now</a>

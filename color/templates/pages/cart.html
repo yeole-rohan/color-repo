@@ -15,10 +15,11 @@
             <div class="col-md-7">
                 <ul class="ul cart-ul">
                     {% for p in product_object_list %}
+                    
                         <li>
                             <div class="li-inner">
                                 <div class="left-img">
-                                    <img class="img-fluid" src="{{ p.product_image.url }}">
+                                    <img class="img-fluid" src="/media/{{ p.product_image }}">
                                 </div>
                                 <div class="right-text">
                                     <p class="name">{{ p.product_name }}</p>
