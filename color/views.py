@@ -273,6 +273,9 @@ def wish_list(request):
     get_all_theme_categories = ThemeCategory.objects.all()
     get_all_themes = Theme.objects.all()
     get_home_banners = HomeBanner.objects.first()
+
+    response = render(request, template_name="pages/wish-list.html", context={'get_home_banners' : get_home_banners, 'get_all_theme_categories' : get_all_theme_categories, 'get_all_themes' : get_all_themes, 'wish_list_count' : wish_list_count, 'wish_list_product' : wish_list_product})
+    
     # For logged in users
     if request.user.is_authenticated:
         if request.method == "POST" and "remove" in request.POST:
@@ -288,7 +291,26 @@ def wish_list(request):
             get_product = Wishlist.objects.filter(product_id = prod_id)
             get_product.delete()
 
-        
+        # if user comes to wishlist after login
+        if 'product_ids' in request.COOKIES: 
+            product_ids = request.COOKIES['product_ids']
+            products = product_ids.split('|')
+            ids = set(products)
+            # Get all items in wishlist
+            all_wish_list_for_current_user = Wishlist.objects.filter(user=request.user.id)
+            # Add item from cookies to wishlist if it is not already there
+            for i in ids:
+                if len(all_wish_list_for_current_user)>0:
+                    for wish_list in all_wish_list_for_current_user:
+                        if int(i) != int(wish_list.product_id):
+                            wish_list = Wishlist.objects.create(user=request.user, product_id = int(i))
+                            wish_list.save()
+                else:
+                    wish_list = Wishlist.objects.create(user=request.user, product_id = int(i))
+                    wish_list.save()
+            # Delete cookies
+            response.delete_cookie('product_ids')
+         
         wish_list_count = Wishlist.objects.filter(user=request.user.id).count()
         all_wish_list_for_current_user = Wishlist.objects.filter(user=request.user.id)
         for wish_list in all_wish_list_for_current_user:
@@ -416,12 +438,14 @@ def regsiter_user(request):
 
 # Useless function
 def login_user(request):
+    print("TRYING LOGIN")
     get_all_theme_categories = ThemeCategory.objects.all()
     get_all_themes = Theme.objects.all()
 
     logout(request)
     username = password = ''
     if request.method == 'POST': 
+        
         username = request.POST['username']
         password = request.POST['password']
         user = authenticate(username=username, password=password)
@@ -509,7 +533,6 @@ def product_details(request, id):
                 product_id_in_wishlist=list(set(product_id_in_wishlist))
                 product_id_in_wishlist.remove(str(id))
                 response.delete_cookie('product_ids')
-                return response
                 #response.set_cookie('product_ids',product_id_in_wishlist)
                 print("product_ids after", product_ids)
 
@@ -527,12 +550,15 @@ def product_details(request, id):
                 if product_ids=="":
                     product_ids=str(id)
                     response.set_cookie('product_ids', product_ids)
+                    return response
                 else:
                     product_ids=product_ids+"|"+str(id)
                     response.set_cookie('product_ids', product_ids)
+                    return response
             else:
                 response.set_cookie('product_ids', id)
-            return response
+                return response
+            
 
     
     # Add product in cart, if it's not already there
